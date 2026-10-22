@@ -1,0 +1,780 @@
+_meta:
+  schema_version: 1.1.0
+  pattern_version: 2.1.0
+  updated_at: '2026-02-20'
+  source: pattern_definitions.yaml
+  engine:
+    expr_lang: cel
+    mode: hybrid_features_first
+_policy_ref:
+  use: config/policies/edit_policy.global.yaml
+  overrides: []
+pattern:
+  key: complex_flat
+  id: 1
+  family: flat
+  subtype: complex_flat
+  names:
+    fa: کامپلکس فلت
+    en: Complex Flat
+texts:
+  doc:
+    fa: 'کامپلکس فلت یک فلت پیچیده با زیرساختارهای داخلی است. سیاست ارزیابی این الگو
+      بر مبنای: (1) قانون جهت (i2 باید خلاف موج C باشد - مسدودکننده)، (2) تکمیل ساختاری
+      (عبور معتبر i2 از P4)، (3) شیب i2 نسبت به i1 (اولویت اصلی کیفیت)، (4) ریسک/ریوارد
+      (RR<1 رد معاملاتی) انجام می‌شود. عبور از P5 معیار سناریویی نیست و فقط برای محاسبه
+      تارگت/ریوارد استفاده می‌شود.
+
+      '
+    en: 'Complex Flat with internal sub-structures. Evaluation policy: direction gate
+      (i2 must oppose C - blocking), structural completion (i2 crosses P4), slope
+      ratio (primary quality), and risk/reward (RR<1 rejected). P5 is target only.
+
+      '
+  description:
+    fa: 'مدل ۶ نقطه‌ای: ورودها حول P2 و P4، استاپ کلی نزدیک P0، تارگت در محدوده P5.
+      تکمیل الگو با عبور i2 از P4 سنجیده می‌شود و سپس کیفیت با شیب و RR درجه‌بندی
+      می‌گردد.
+
+      '
+    en: '6-point model. Entries around P2/P4, stop near P0, target near P5. Completion
+      via i2 crossing P4.
+
+      '
+  notes:
+    fa: 'قانون مسدودکننده: اگر i2 هم‌جهت C باشد، الگو ایجاد نشده/Fail است. همچنین
+      RR<1 حتی در صورت تکمیل ساختاری، رد معاملاتی محسوب می‌شود. بعد از عبور از P4،
+      شیب همیشه اولویت دارد: کمتر از 0.7 ضعیف، 0.7 تا 1 نرمال، 1 تا 1.2 تایید، بالای
+      1.2 پرقدرت.
+
+      '
+    en: 'Blocking: if i2 is same direction as C => pattern not formed/failed. RR<1
+      is rejected. After P4 cross, slope is primary: <0.7 weak, 0.7-1 normal, 1-1.2
+      confirmed, >=1.2 strong.
+
+      '
+geometry:
+  point_model:
+    type: 6pt
+    points:
+      - id: P0
+        ref: impulse1.start
+      - id: P1
+        ref: impulse1.end
+      - id: P2
+        ref: A.end
+      - id: P3
+        ref: B.end
+      - id: P4
+        ref: C.end
+      - id: P5
+        ref: impulse2.end
+    wave_map:
+      impulse1:
+        start: P0
+        end: P1
+      A:
+        start: P1
+        end: P2
+      B:
+        start: P2
+        end: P3
+      C:
+        start: P3
+        end: P4
+      impulse2:
+        start: P4
+        end: P5
+  explain_fa: 'مدل ۶ نقطه‌ای: P0,P1 ایمپالس ۱؛ P2 پایان A؛ P3 پایان B؛ P4 پایان C؛
+    P5 پیشروی/پایان i2. تکمیل ساختاری وقتی است که i2 از P4 عبور کند (features.completion.i2_crossed_P4).
+
+    '
+  explain_en: '6-point model. Completion is when i2 crosses P4 (features.completion.i2_crossed_P4).
+
+    '
+ui_editing:
+  editable_sections:
+    - texts.doc
+    - texts.description
+    - texts.notes
+    - numbers
+    - rules
+    - transitions
+    - decision_model
+    - invalidations
+    - lifecycle
+    - quality
+    - entry_setups
+    - outcome_scenarios
+    - feature_catalog
+    - engine_contract
+numbers:
+  ratios:
+    - key: B_over_A
+      title_fa: نسبت B به A
+      title_en: B/A
+      min: 0.3
+      max: 1.8
+      typical: 1.0
+      display:
+        formula_fa: '|B/A| = |P3-P2| / |P2-P1|'
+        formula_en: '|B/A| = |P3-P2| / |P2-P1|'
+      feature_ref: features.ratios.B_over_A
+    - key: C_over_A
+      title_fa: نسبت C به A
+      title_en: C/A
+      min: 0.3
+      max: 1.8
+      typical: 1.0
+      display:
+        formula_fa: '|C/A| = |P4-P3| / |P2-P1|'
+        formula_en: '|C/A| = |P4-P3| / |P2-P1|'
+      feature_ref: features.ratios.C_over_A
+  thresholds:
+    - key: i2_slope_ratio
+      title_fa: نسبت شیب i2 به i1
+      title_en: i2 slope ratio vs i1
+      min: 0.0
+      typical: 1.1
+      levels:
+        weak: 0.7
+        normal: 1.0
+        strong: 1.2
+      feature_ref: features.impulses.i2_slope_ratio
+    - key: rr_entry_a
+      title_fa: RR ورود A
+      title_en: RR entry A
+      min: 0.0
+      typical: 1.1
+      levels:
+        weak: 1.0
+        normal: 1.0
+        strong: 1.5
+      feature_ref: features.rr.by_entry.entry_a
+    - key: rr_entry_b
+      title_fa: RR ورود B
+      title_en: RR entry B
+      min: 0.0
+      typical: 1.2
+      levels:
+        weak: 1.0
+        normal: 1.0
+        strong: 1.5
+      feature_ref: features.rr.by_entry.entry_b
+  probabilities:
+    occurrence:
+      value: 0.5
+      text_fa: تخمینی
+      text_en: Estimated
+    success:
+      value: 0.6
+      text_fa: تخمینی
+      text_en: Estimated
+  success_profiles:
+    by_entry_type:
+      entry_a:
+        value: 0.55
+        text_fa: موفقیت تخمینی ورود A
+        text_en: Estimated success for Entry A
+      entry_b:
+        value: 0.65
+        text_fa: موفقیت تخمینی ورود B
+        text_en: Estimated success for Entry B
+error_catalog:
+  structure: []
+  ratios: []
+  completion: []
+  quality: []
+rules:
+  structure:
+    - id: flat_retrace_rule
+      severity: fail
+      title_fa: بازگشت عمیق
+      title_en: Deep Retrace
+      expr_cel: features.ratios.a_retrace > 0.55
+    - id: complex_requires_internal_or_long_b
+      severity: fail
+      error_code: ERR_COMPLEX_NO_INTERNAL
+      title_fa: زیرساختار داخلی
+      title_en: Internal sub-structure
+      expr_cel: features.complexity.has_internal_structure || features.metrics.b_duration_ratio
+        >= features.metrics.complex_flat_b_duration_ratio
+  completion:
+    - id: completion_requires_i2_cross_P4
+      severity: info
+      error_code: INFO_COMPLETE_P4
+      title_fa: تکمیل با عبور i2 از P4
+      title_en: Completion via i2 crossing P4
+      expr_cel: features.completion.i2_crossed_P4
+      message_fa: تکمیل ساختاری زمانی است که i2 از P4 عبور کند.
+      message_en: Structural completion occurs when i2 crosses P4.
+  quality: []
+  ratios: []
+transitions:
+  can_morph_to:
+    - key: regular_flat
+      title_fa: تبدیل به رگولار فلت
+      title_en: Morph to regular flat
+      decision_rule_id: morph_to_regular_if_no_internal_and_ratios_regular_like
+      when_cel: '!features.complexity.has_internal_structure && features.ratios.B_over_A
+        >= 0.8 && features.ratios.B_over_A <= 1.0'
+      explain_fa: اگر زیرساختار داخلی نباشد و نسبت‌ها به رگولار نزدیک باشند، تمایل
+        به رگولار دارد.
+      explain_en: If no internal structure and ratios resemble regular, it tends to
+        morph to regular.
+decision_model:
+  order:
+    - exclude
+    - invalid
+    - morph
+    - valid
+  notes_fa: exclude -> invalid -> morph -> valid
+invalidations:
+  rules:
+    - id: block_direction_violation
+      error_code: ERR_DIRECTION
+      when_cel: '!features.direction.i2_opposes_C'
+      decision:
+        kind: invalid
+        reason_code: DIRECTION_VIOLATION
+      ui:
+        title_fa: ناموفق
+        badge_fa: Fail
+        explain_fa: i2 هم‌جهت C است؛ الگو ایجاد نشده/Fail.
+        message_fa: قانون جهت نقض شد (i2 باید خلاف C باشد).
+        message_en: Direction gate failed (i2 must oppose C).
+    - id: morph_to_regular
+      error_code: MORPH_REG
+      when_cel: '!features.complexity.has_internal_structure && features.ratios.B_over_A
+        >= 0.8 && features.ratios.B_over_A <= 1.0'
+      decision:
+        kind: morph
+        reason_code: MORPH_TO_REGULAR
+        target_key: regular_flat
+      ui:
+        title_fa: تبدیل
+        badge_fa: Morph
+        explain_fa: شرایط کامپلکس برقرار نیست؛ تبدیل به رگولار.
+        message_fa: تبدیل به regular_flat
+        message_en: Morph to regular_flat
+lifecycle:
+  explain_fa: 'چرخه تشکیل تا تکمیل: forming -> A_done -> B_done -> C_done -> complete'
+  explain_en: 'Lifecycle: forming -> A_done -> B_done -> C_done -> complete'
+  min_points: 5
+  stages:
+    - key: forming
+      when_cel: context.point_count < 3
+    - key: a_done
+      when_cel: context.point_count >= 3
+    - key: b_done
+      when_cel: context.point_count >= 4
+    - key: c_done
+      when_cel: context.point_count >= 5
+    - key: complete
+      when_cel: features.completion.i2_crossed_P4
+quality:
+  strength:
+    model: policy_bucket
+    weights:
+      direction: 0.4
+      slope: 0.4
+      rr: 0.2
+    thresholds:
+      strong: 0.7
+      normal: 0.5
+  confidence:
+    model: weighted_sum
+    factors:
+      structure: 0.4
+      direction: 0.3
+      risk_reward: 0.3
+    thresholds:
+      high: 0.75
+      medium: 0.5
+  risk_flags:
+    - id: high_risk_high_reward
+      level: high
+      error_code: RISK_HR_HR
+      when_cel: features.risk.high_risk_high_reward
+      message_fa: ریسک بالا / ریوارد بالا
+      message_en: high risk high reward
+    - id: high_risk_low_reward
+      level: high
+      error_code: RISK_HR_LR
+      when_cel: features.risk.high_risk_low_reward
+      message_fa: ریسک بالا / ریوارد پایین
+      message_en: high risk low reward
+entry_setups:
+  - id: CMP-A
+    name_fa: ورود A (اطراف P2)
+    label_fa: ورود A
+    label_en: Entry A
+    style: aggressive
+    rationale_fa: ورود زودهنگام اطراف P2 (ریسک بالاتر، نیازمند RR حداقل 1)
+    trigger_cel: features.progress.impulse2_started && features.rr.by_entry.entry_a
+      >= 1.0 && features.direction.i2_opposes_C
+    entry_zone:
+      point_ref: P2
+    stop_zone:
+      point_ref: P0
+    target_zone:
+      point_ref: P5
+    rr_calculation: '|P5-P2|/|P2-P0|'
+    rr_gate:
+      reject_below: 1.0
+      confirmable_from: 1.0
+      strong_from: 1.5
+    confirmation_hooks:
+      - features.direction.i2_opposes_C
+      - features.impulses.i2_slope_ratio
+    stop_cel: features.risk.stop_distance >= 0.0
+    confirms:
+      - cel: features.direction.i2_opposes_C
+        label_fa: جهت i2 خلاف C
+        label_en: i2 opposes C
+      - cel: features.rr.by_entry.entry_a >= 1.0
+        label_fa: RR قابل قبول
+        label_en: RR acceptable
+    editable: true
+  - id: CMP-B
+    name_fa: ورود B (اطراف P4)
+    label_fa: ورود B
+    label_en: Entry B
+    style: conservative
+    rationale_fa: ورود دیرتر اطراف P4 بعد از تکمیل ساختاری (P4-cross).
+    trigger_cel: features.completion.i2_crossed_P4 && features.rr.by_entry.entry_b
+      >= 1.0 && features.direction.i2_opposes_C
+    entry_zone:
+      point_ref: P4
+    stop_zone:
+      point_ref: P0
+    target_zone:
+      point_ref: P5
+    rr_calculation: '|P5-P4|/|P4-P0|'
+    rr_gate:
+      reject_below: 1.0
+      confirmable_from: 1.0
+      strong_from: 1.5
+    confirmation_hooks:
+      - features.direction.i2_opposes_C
+      - features.impulses.i2_slope_ratio
+    stop_cel: features.risk.stop_distance >= 0.0
+    confirms:
+      - cel: features.direction.i2_opposes_C
+        label_fa: جهت i2 خلاف C
+        label_en: i2 opposes C
+      - cel: features.rr.by_entry.entry_b >= 1.0
+        label_fa: RR تایید
+        label_en: RR confirm
+    editable: true
+outcome_scenarios:
+  - id: FILTERED_COMPLEX_FLAT
+    priority: 0
+    conditions_cel:
+      all:
+        - '!features.structure_valid'
+    outcome:
+      comp: false
+      valid: false
+      succ: false
+      mark: false
+      reason_code: FILTERED
+      reason_fa: ❌ ساختار نامعتبر
+      description_fa: ساختار پایه معتبر نیست.
+      description_en: Invalid structure.
+      risk_override: ultra_high
+      reward_override: low
+      strength_override: weak
+  - id: FAIL_DIRECTION_COMPLEX_FLAT
+    priority: 1
+    conditions_cel:
+      all:
+        - features.structure_valid
+        - features.complexity.has_internal_structure
+        - features.direction.i2_same_as_C
+    outcome:
+      comp: false
+      valid: false
+      succ: false
+      mark: false
+      reason_code: BLOCK_DIRECTION_VIOLATION
+      reason_fa: '❌ Fail: نقض جهت'
+      description_fa: i2 هم‌جهت C است؛ الگو Fail محسوب می‌شود.
+      description_en: Direction gate failed.
+      risk_override: high
+      reward_override: low
+      strength_override: weak
+  - id: REJECT_RR_LT_1_COMPLEX_FLAT
+    priority: 5
+    conditions_cel:
+      all:
+        - features.structure_valid
+        - features.complexity.has_internal_structure
+        - features.direction.i2_opposes_C
+        - features.completion.i2_crossed_P4
+        - features.rr.by_entry.entry_b < 1.0
+    outcome:
+      comp: true
+      valid: false
+      succ: false
+      mark: false
+      reason_code: BLOCK_RR_BELOW_1
+      reason_fa: '❌ NOT_TRADABLE: RR<1'
+      description_fa: با وجود تکمیل ساختاری، RR ورود فعال کمتر از 1 است.
+      description_en: RR below 1.
+      risk_override: high
+      reward_override: low
+      strength_override: weak
+  - id: PENDING_COMPLEX_FLAT
+    priority: 10
+    conditions_cel:
+      all:
+        - features.structure_valid
+        - features.complexity.has_internal_structure
+        - '!features.completion.i2_crossed_P4'
+    outcome:
+      comp: false
+      valid: true
+      succ: false
+      mark: true
+      reason_code: COMPLETION_REQUIRES_P4_CROSS
+      reason_fa: ⏳ در انتظار عبور از P4
+      description_fa: تا عبور i2 از P4، الگو تکمیل نیست.
+      description_en: Pending P4 cross.
+      risk_override: medium
+      reward_override: medium
+      strength_override: normal
+  - id: IDEAL_EXECUTION_COMPLEX_FLAT
+    priority: 29
+    conditions_cel:
+      all:
+        - features.structure_valid
+        - features.complexity.has_internal_structure
+        - features.direction.i2_opposes_C
+        - features.completion.i2_crossed_P4
+        - features.impulses.i2_slope_ratio >= 0.7
+        - features.rr.by_entry.entry_b >= 1.5
+    outcome:
+      comp: true
+      valid: true
+      succ: true
+      mark: true
+      reason_code: IDEAL_EXECUTION_BY_RR
+      reason_fa: 🏆 IDEAL_EXECUTION
+      description_fa: RR بالا با شیب قابل قبول.
+      description_en: Ideal execution by RR.
+      risk_override: low
+      reward_override: high
+      strength_override: normal
+  - id: COMPLETE_WEAK_COMPLEX_FLAT
+    priority: 30
+    conditions_cel:
+      all:
+        - features.structure_valid
+        - features.complexity.has_internal_structure
+        - features.direction.i2_opposes_C
+        - features.completion.i2_crossed_P4
+        - features.rr.by_entry.entry_b >= 1.0
+        - features.impulses.i2_slope_ratio < 0.7
+    outcome:
+      comp: true
+      valid: true
+      succ: true
+      mark: true
+      reason_code: COMPLETE_WEAK_SLOPE_LT_0_7
+      reason_fa: ⚠️ COMPLETE_WEAK
+      description_fa: عبور از P4 انجام شده ولی شیب کمتر از 0.7 است.
+      description_en: Complete weak.
+      risk_override: medium
+      reward_override: low
+      strength_override: weak
+  - id: COMPLETE_NORMAL_COMPLEX_FLAT
+    priority: 31
+    conditions_cel:
+      all:
+        - features.structure_valid
+        - features.complexity.has_internal_structure
+        - features.direction.i2_opposes_C
+        - features.completion.i2_crossed_P4
+        - features.rr.by_entry.entry_b >= 1.0
+        - features.impulses.i2_slope_ratio >= 0.7
+        - features.impulses.i2_slope_ratio < 1.0
+    outcome:
+      comp: true
+      valid: true
+      succ: true
+      mark: true
+      reason_code: COMPLETE_NORMAL_SLOPE_0_7_TO_1
+      reason_fa: ✅ COMPLETE_NORMAL
+      description_fa: عبور از P4 با شیب 0.7 تا 1.
+      description_en: Complete normal.
+      risk_override: medium
+      reward_override: medium
+      strength_override: normal
+  - id: COMPLETE_CONFIRMED_COMPLEX_FLAT
+    priority: 32
+    conditions_cel:
+      all:
+        - features.structure_valid
+        - features.complexity.has_internal_structure
+        - features.direction.i2_opposes_C
+        - features.completion.i2_crossed_P4
+        - features.rr.by_entry.entry_b >= 1.0
+        - features.impulses.i2_slope_ratio >= 1.0
+        - features.impulses.i2_slope_ratio < 1.2
+    outcome:
+      comp: true
+      valid: true
+      succ: true
+      mark: true
+      reason_code: COMPLETE_CONFIRMED_SLOPE_1_TO_1_2
+      reason_fa: ✅ COMPLETE_CONFIRMED
+      description_fa: عبور از P4 با شیب 1 تا 1.2.
+      description_en: Complete confirmed.
+      risk_override: medium
+      reward_override: high
+      strength_override: normal
+  - id: COMPLETE_STRONG_COMPLEX_FLAT
+    priority: 33
+    conditions_cel:
+      all:
+        - features.structure_valid
+        - features.complexity.has_internal_structure
+        - features.direction.i2_opposes_C
+        - features.completion.i2_crossed_P4
+        - features.rr.by_entry.entry_b >= 1.0
+        - features.impulses.i2_slope_ratio >= 1.2
+    outcome:
+      comp: true
+      valid: true
+      succ: true
+      mark: true
+      reason_code: COMPLETE_STRONG_SLOPE_GE_1_2
+      reason_fa: ✅ COMPLETE_STRONG
+      description_fa: عبور از P4 با شیب بالای 1.2.
+      description_en: Complete strong.
+      risk_override: low
+      reward_override: high
+      strength_override: strong
+  - id: FALLBACK_LAST_COMPLEX_FLAT
+    priority: 999
+    conditions_cel:
+      all: []
+    outcome:
+      comp: false
+      valid: true
+      succ: false
+      mark: false
+      reason_code: FALLBACK
+      reason_fa: ℹ️ پیش‌فرض
+      description_fa: نیاز به بازبینی شرایط.
+      description_en: Fallback.
+      risk_override: medium
+      reward_override: medium
+      strength_override: normal
+ui_defaults:
+  toolbar:
+    mark: true
+    strength: auto
+    direction: auto
+feature_catalog:
+  version: '2.1'
+  items:
+    - path: features.structure_valid
+      type: boolean
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+        - ui
+      desc_fa: آیا ساختار پایه معتبر است؟
+      desc_en: Is base structure valid?
+      source:
+        kind: engine_derived
+    - path: features.structure.B_breaks_i1_end
+      type: boolean
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+      desc_fa: آیا موج B انتهای i1 را شکسته است؟
+      desc_en: Does wave B break i1 end?
+      source:
+        kind: engine_derived
+    - path: features.structure.C_breaks_A_end
+      type: boolean
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+      desc_fa: آیا موج C انتهای A را شکسته است؟
+      desc_en: Does wave C break A end?
+      source:
+        kind: engine_derived
+    - path: features.candles.n_b
+      type: float
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+        - ui
+      desc_fa: تعداد کندل موج B (برای نسبت B/I1 در تشخیص کامپلکس فلت)
+      desc_en: Wave B candle count (used in dynamic B/I1 ratio for complex flat)
+      source:
+        kind: engine_derived
+    - path: features.complexity.has_internal_structure
+      type: boolean
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+        - ui
+      desc_fa: آیا زیرساختار داخلی برای کامپلکس فلت وجود دارد؟
+      desc_en: Has internal sub-structure?
+      source:
+        kind: engine_derived
+    - path: features.direction.i2_opposes_C
+      type: boolean
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+        - ui
+      desc_fa: آیا i2 خلاف جهت موج C است؟ (قانون مسدودکننده)
+      desc_en: Does i2 oppose C? (blocking gate)
+      source:
+        kind: engine_derived
+    - path: features.direction.i2_same_as_C
+      type: boolean
+      scope: pattern
+      required: false
+      required_for:
+        - engine
+      desc_fa: features.direction.i2_same_as_C
+      desc_en: features.direction.i2_same_as_C
+      source:
+        kind: engine_derived
+    - path: features.impulses.i2_slope_ratio
+      type: float
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+        - ui
+      desc_fa: نسبت شیب i2 به i1
+      desc_en: Slope ratio i2 vs i1
+      source:
+        kind: engine_derived
+    - path: features.completion.i2_crossed_P4
+      type: boolean
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+        - ui
+      desc_fa: آیا i2 از P4 عبور کرده؟ (تکمیل ساختاری)
+      desc_en: Has i2 crossed P4? (structural completion)
+      source:
+        kind: engine_derived
+    - path: features.progress.impulse2_started
+      type: boolean
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+        - ui
+      desc_fa: آیا i2 شروع شده است؟
+      desc_en: Has impulse2 started?
+      source:
+        kind: engine_derived
+    - path: features.rr.by_entry.entry_a
+      type: float
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+        - ui
+      desc_fa: RR برای ورود A (P2)
+      desc_en: RR for Entry A (P2)
+      source:
+        kind: engine_derived
+    - path: features.rr.by_entry.entry_b
+      type: float
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+        - ui
+      desc_fa: RR برای ورود B (P4)
+      desc_en: RR for Entry B (P4)
+      source:
+        kind: engine_derived
+    - path: features.risk.stop_distance
+      type: float
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+        - ui
+      desc_fa: فاصله ورود تا استاپ (P0) برای entry فعال
+      desc_en: Stop distance (to P0) for active entry
+      source:
+        kind: engine_derived
+    - path: features.reward.target_distance
+      type: float
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+        - ui
+      desc_fa: فاصله ورود تا تارگت (P5) برای entry فعال
+      desc_en: Target distance (to P5) for active entry
+      source:
+        kind: engine_derived
+    - path: features.traps.fake_breakout
+      type: boolean
+      scope: pattern
+      required: false
+      required_for:
+        - engine
+      desc_fa: آیا فیک‌اوت/تله شناسایی شده است؟
+      desc_en: Fake breakout / trap detected?
+      source:
+        kind: engine_derived
+    - path: features.ratios.B_over_A
+      type: float
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+        - ui
+      desc_fa: نسبت طول B به A
+      desc_en: B/A ratio
+      source:
+        kind: engine_derived
+    - path: features.ratios.C_over_A
+      type: float
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+        - ui
+      desc_fa: نسبت طول C به A
+      desc_en: C/A ratio
+      source:
+        kind: engine_derived
+engine_contract:
+  scenario_resolution:
+    mode: first_match_by_priority
+  decision_resolution:
+    mode: first_match_by_order
+    order_ref: decision_model.order
+    behavior:
+      on_invalid: stop
+      on_exclude: stop
+      on_morph: handoff
+  required_context_paths:
+    - context.point_count
+    - context.trade_direction
+    - context.trend_context
+    - context.trend_strength

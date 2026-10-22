@@ -1,0 +1,43 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "trading": "Trading & Charts",
+    "ai_copilot": "AI Copilot",
+    "scanner": "Market Scanner",
+    "orders": "Orders & Positions",
+    "strategy_builder": "Strategy Builder",
+    "ai_optimizer": "AI Pattern & Learning",
+    "backtest": "Backtest",
+    "settings": "Settings & Integrations"
+  },
+  "status": {
+    "engine_running": "Trading Engine Active",
+    "engine_stopped": "Engine Stopped",
+    "online": "Online & Connected",
+    "offline": "Offline",
+    "paper_trading": "Paper Trading Account",
+    "live_trading": "Live Trading Mode",
+    "check_interval": "15m Check (Candle Close)"
+  },
+  "actions": {
+    "save": "Save Changes",
+    "cancel": "Cancel",
+    "confirm": "Confirm & Run",
+    "delete": "Delete",
+    "edit": "Edit",
+    "test_connection": "Test Connection",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "kill_switch": "KILL-SWITCH",
+    "loading": "Processing...",
+    "retry": "Retry"
+  },
+  "timeframes": {
+    "4h_desc": "4 Hours (Trend Structure)",
+    "1h_desc": "1 Hour (Pattern Trigger)",
+    "15m_desc": "15 Minutes (Momentum Filter)",
+    "5m_desc": "5 Minutes",
+    "1m_desc": "1 Minute",
+    "1d_desc": "1 Day"
+  }
+}

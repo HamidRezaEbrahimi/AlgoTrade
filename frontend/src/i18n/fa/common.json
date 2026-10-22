@@ -1,0 +1,43 @@
+{
+  "nav": {
+    "dashboard": "داشبورد",
+    "trading": "معاملات و چارت",
+    "ai_copilot": "دستیار هوش مصنوعی",
+    "scanner": "اسکنر بازار",
+    "orders": "سفارشات و پوزیشن‌ها",
+    "strategy_builder": "طراحی استراتژی (بصری)",
+    "ai_optimizer": "کشف الگو و یادگیری AI",
+    "backtest": "بک‌تست",
+    "settings": "تنظیمات و اتصالات"
+  },
+  "status": {
+    "engine_running": "موتور معاملاتی فعال",
+    "engine_stopped": "موتور متوقف",
+    "online": "آنلاین و متصل",
+    "offline": "قطع ارتباط",
+    "paper_trading": "حساب آزمایشی (Paper Trading)",
+    "live_trading": "معاملات واقعی (Live)",
+    "check_interval": "بررسی ۱۵ دقیقه‌ای (کندل کلوز)"
+  },
+  "actions": {
+    "save": "ذخیره تغییرات",
+    "cancel": "انصراف",
+    "confirm": "تایید و اجرا",
+    "delete": "حذف",
+    "edit": "ویرایش",
+    "test_connection": "تست اتصال",
+    "activate": "فعال‌سازی",
+    "deactivate": "غیرفعال‌سازی",
+    "kill_switch": "قطع اضطراری (KILL-SWITCH)",
+    "loading": "در حال پردازش...",
+    "retry": "تلاش مجدد"
+  },
+  "timeframes": {
+    "4h_desc": "۴ ساعته (تحلیل روند)",
+    "1h_desc": "۱ ساعته (تریگر الگو)",
+    "15m_desc": "۱۵ دقیقه (شتاب ورود)",
+    "5m_desc": "۵ دقیقه",
+    "1m_desc": "۱ دقیقه",
+    "1d_desc": "۱ روزه"
+  }
+}

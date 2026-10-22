@@ -1,0 +1,9 @@
+{
+  "title": "Risk & Capital Management Rules",
+  "rule_1": "Strict 1% max capital risk per trade based on entry-to-stop distance",
+  "rule_2": "Max 4 simultaneous open positions and 12% max capital exposure",
+  "rule_3": "At 8% Drawdown: Halve new position size (0.5% risk per trade)",
+  "rule_4": "At 12% Drawdown: Halt all new trade entries (Circuit Breaker)",
+  "rule_5": "At RR=1.5: Move Stop Loss to Breakeven & activate Trailing Stop (1.2×ATR)",
+  "rule_6": "At RR=2.5: Secure profit by closing 50% & trail remaining 50%"
+}

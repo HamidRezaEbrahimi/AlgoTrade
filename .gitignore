@@ -1,0 +1,61 @@
+# ── Python ────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+.tox/
+
+# ── Virtual Environments ──────────────────
+venv/
+.venv/
+env/
+
+# ── Node / Frontend ──────────────────────
+node_modules/
+frontend/dist/
+frontend/.vite/
+*.tsbuildinfo
+
+# ── Environment & Secrets ─────────────────
+.env
+.env.local
+.env.production
+*.pem
+*.key
+
+# ── IDE ───────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── OS ────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Data & Logs ───────────────────────────
+data/
+logs/
+exports/
+*.db
+*.sqlite3
+
+# ── Docker ────────────────────────────────
+docker-compose.override.yml
+
+# ── Misc ──────────────────────────────────
+*.bak
+*.tmp
+backend/alef_trade
+alef_trade/

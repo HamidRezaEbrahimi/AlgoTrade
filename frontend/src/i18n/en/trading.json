@@ -1,0 +1,51 @@
+{
+  "header": {
+    "title": "Algorithmic Trading & Live Price Action Analysis",
+    "subtitle": "Multi-timeframe 4H, 1H and 15M analysis with 8-criteria scoring and live candlestick chart",
+    "btn_safety_order": "Place Safe Manual Order"
+  },
+  "symbol_picker": {
+    "search_placeholder": "Search symbol (BTC, ETH, XAUUSD)...",
+    "tab_crypto": "Crypto",
+    "tab_gold_forex": "Gold & Forex",
+    "tab_toman": "Toman (IR)"
+  },
+  "criteria": {
+    "title": "8-Criteria Price Action Evaluation",
+    "score_label": "Total Score:",
+    "status_qualified": "Qualified for Entry (Score >= 6)",
+    "status_unqualified": "Not Qualified for Entry",
+    "crit_1": "1. 4H Structure (BOS / CHoCH)",
+    "crit_2": "2. Valid Location (S/R, OB, FVG)",
+    "crit_3": "3. 1H Candlestick Pattern",
+    "crit_4": "4. 15M Momentum Filter",
+    "crit_5": "5. RSI(14) Confirmation",
+    "crit_6": "6. Volume > MA(10)",
+    "crit_7": "7. Risk/Reward Ratio >= 1.5",
+    "crit_8": "8. Structural Stop Loss Placement"
+  },
+  "risk_card": {
+    "title": "Risk Management & System Recommendations",
+    "entry_price": "Current Entry Price:",
+    "stop_loss": "Structural Stop Loss (SL):",
+    "tp1": "Target 1 (1.5R):",
+    "tp2": "Target 2 (2.5R):",
+    "max_risk": "Max Risk:",
+    "max_risk_val": "1.0% Total Capital",
+    "rr_ratio": "Risk/Reward:"
+  },
+  "order_modal": {
+    "title": "Place New Safe Order",
+    "symbol_label": "Trading Symbol:",
+    "direction_label": "Position Direction:",
+    "dir_buy": "Buy (LONG)",
+    "dir_sell": "Sell (SHORT)",
+    "amount_label": "Trade Value (USDT):",
+    "entry_price": "Entry Price:",
+    "sl_price": "Stop Loss (SL):",
+    "tp_price": "Take Profit (TP):",
+    "safety_warning": "⚠️ Order will be verified against the 1% risk management guard before dispatch.",
+    "btn_submit": "Confirm & Dispatch Order",
+    "order_success": "Order placed successfully."
+  }
+}

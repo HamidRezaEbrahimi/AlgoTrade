@@ -1,0 +1,51 @@
+{
+  "header": {
+    "title": "Unified Settings & Integrations Hub",
+    "subtitle": "Centralized management of crypto exchanges (Wallex, Nobitex, Faraz), Telegram/Bale bots, AI models, and risk controls",
+    "btn_add_integration": "Add New Integration",
+    "btn_save_safety": "Save Risk Settings",
+    "saved_success": "Risk management and safety settings saved successfully."
+  },
+  "tabs": {
+    "integrations": "Integrations, Exchanges & Bots",
+    "safety": "Risk & Trading Safety Guard",
+    "rules": "8-Criteria Trading Rules"
+  },
+  "filters": {
+    "all": "All Services",
+    "exchange": "Exchanges (Wallex, Nobitex, Faraz)",
+    "bot": "Bots (Telegram & Bale)",
+    "ai": "AI Assistant Models"
+  },
+  "modal": {
+    "title": "Add New Service Integration",
+    "service_type": "Service Category:",
+    "type_exchange": "Exchange / Data Feed",
+    "type_bot": "Messenger Bot",
+    "type_ai": "AI Assistant",
+    "provider_label": "Provider:",
+    "name_label": "Integration Name:",
+    "name_placeholder": "e.g. Primary Wallex Account, Signal Bot...",
+    "api_key": "API Key:",
+    "api_secret": "API Secret:",
+    "token": "API Token:",
+    "domain": "Server Domain:",
+    "chat_id": "Chat ID / Channel:",
+    "model_name": "Model Name:",
+    "btn_save": "Save & Connect Integration"
+  },
+  "safety": {
+    "master_title": "Master Auto-Trading Switch",
+    "auto_enabled": "Auto-Trading Active",
+    "auto_disabled": "Safe Mode (Locked)",
+    "master_desc": "To ensure 100% capital safety, auto-trading is locked by default. The system evaluates all 8 criteria in real-time without dispatching orders.",
+    "btn_lock": "Lock & Stop Auto-Trading",
+    "btn_unlock": "Enable Auto-Trading (Confirm Risk)",
+    "risk_params_title": "Capital Risk Management Parameters",
+    "max_risk_label": "Maximum Risk per Trade (Position Sizing):",
+    "max_risk_hint": "% of Total Capital (Default: 1.0%)",
+    "circuit_title": "Daily Drawdown Circuit Breakers:",
+    "circuit_8": "• 8% Drawdown: Reduce entry size by 50%",
+    "circuit_12": "• 12% Drawdown: Suspend all new trades until tomorrow"
+  }
+}

@@ -1,0 +1,114 @@
+version: '1.2'
+description: Global Engine Policy & Defaults (Migrated from outcome_rules.yaml)
+engine_policy:
+  priority_order: ascending
+  priority_note: Lower number = higher priority. The first matched scenario is applied.
+  range_policy:
+    min_inclusive: true
+    max_exclusive: true
+  missing_metrics_policy:
+    requires_metrics: If required metrics are missing (null/None), scenario must be
+      skipped.
+  strength_risk_reward_policy:
+    strength_source: thresholds
+    risk_reward_source: risk_classifier
+    scenario_override_fields:
+      - risk_override
+      - reward_override
+      - strength_override
+defaults:
+  risk_class: PENDING
+  reward_class: PENDING
+  strength: PENDING
+  decision_reason: PENDING
+  decision_description_fa: در انتظار تکمیل یا تشخیص سناریو
+default_outcome:
+  comp: false
+  valid: false
+  risk_override: high
+  reward_override: low
+  strength_override: PENDING
+  succ: false
+  mark: false
+  reason_code: PENDING
+  description_fa: در انتظار تکمیل الگو
+reward_rules:
+  default_mapping:
+    strong: high
+    normal: medium
+    weak: low
+thresholds_common:
+  retr_low_max: 0.382
+  retr_medium_max: 0.5
+  retr_high_max: 0.8
+  i2_ratio_weak_max: 0.8
+  i2_ratio_strong_min: 1.2
+  over_extended_i2_min: 1.8
+  over_extended_slope_max: 0.7
+  fake_breakout_i2_max: 0.8
+  touch_zone_distance_norm: 0.1
+derived_metrics_contract:
+  R: '|P2 - P1|'
+  I2: '4pt: |P4-P3| ; 6pt: |P6-P5|'
+  i2_ratio: I2 / R
+  retr: '|P2 - P3| / R'
+  N1: candles count for i1
+  N2: candles count for i2
+  slope_ratio: (I2/N2) / (R/N1)
+touch_zone_contract:
+  definition: Touch Zone means price reached the P2 level area without a meaningful
+    breakout.
+  distance_formula: abs(P6 - P2) <= touch_zone_distance_norm * R
+  directional_breakout:
+    bullish_breakout_valid: P6 > P2
+    bearish_breakout_valid: P6 < P2
+ui_meta:
+  result_codes:
+    FILTERED:
+      title_fa: رد ساختاری
+      icon: ⛔
+      desc_fa: الگو از نظر ساختار معتبر نیست
+    FAKE_BREAKOUT:
+      title_fa: شکست فیک
+      icon: ⚠️
+      desc_fa: شکست رخ داده اما قدرت کافی ندارد
+    OVER_EXTENDED:
+      title_fa: بیش‌ازحد کشیده
+      icon: ⚠️
+      desc_fa: حرکت بعدی خیلی کشیده یا کند است
+    FLAG_OK:
+      title_fa: فلگ سالم
+      icon: ✅
+      desc_fa: اصلاح کنترل‌شده و ادامه قابل قبول
+    FLAG_HIGH_RISK:
+      title_fa: فلگ پرریسک
+      icon: 🟠
+      desc_fa: اصلاح عمیق با ریسک بالا
+    TOUCH_ZONE:
+      title_fa: تماس بدون شکست
+      icon: 🎯
+      desc_fa: قیمت به سطح هدف رسیده بدون شکست
+    VALID_NOT_COMPLETED:
+      title_fa: معتبر ولی ناتمام
+      icon: ⏳
+      desc_fa: ساختار درست اما تأیید نشده
+    SUCCESS:
+      title_fa: تکمیل موفق
+      icon: ✅
+      desc_fa: شکست معتبر و ادامه حرکت تأیید شده
+    PENDING:
+      title_fa: در انتظار
+      icon: ⏳
+      desc_fa: داده کافی نیست
+    WEAK_BREAKOUT:
+      title_fa: شکست ضعیف
+      icon: ⚠️
+      desc_fa: خروج ضعیف با قدرت ناکافی
+    NOT_COMPLETED:
+      title_fa: ناتمام
+      icon: ⏳
+      desc_fa: در حال شکل‌گیری
+    FLAT_OK:
+      title_fa: فلت موفق
+      icon: ✅
+      desc_fa: الگوی فلت کامل شده

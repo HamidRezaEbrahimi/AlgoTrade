@@ -1,0 +1,16 @@
+{
+  "title": "Qualified Market Opportunities",
+  "subtitle": "Automatic scanning of high-liquidity markets every 15 minutes after candle close",
+  "score_label": "Score (out of 8)",
+  "direction": "Direction",
+  "long": "Long (Buy)",
+  "short": "Short (Sell)",
+  "entry_price": "Entry Price",
+  "stop_loss": "Stop Loss",
+  "take_profit_1": "Target 1 (RR=1.5)",
+  "take_profit_2": "Target 2 (RR=2.5)",
+  "risk_reward": "Risk/Reward Ratio",
+  "ready_to_enter": "Ready to Enter",
+  "no_opportunities": "No qualified signals (min 6/8 criteria) found at this moment.",
+  "view_chart_and_trade": "View Chart & Trade"
+}

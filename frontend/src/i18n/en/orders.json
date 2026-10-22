@@ -1,0 +1,16 @@
+{
+  "title": "Orders & Positions",
+  "active_positions": "Active Positions",
+  "history": "Closed Trade History",
+  "symbol": "Symbol",
+  "exchange": "Exchange",
+  "entry_price": "Entry Price",
+  "exit_price": "Exit Price",
+  "size": "Size",
+  "pnl": "PnL",
+  "risk_reward": "Actual R:R",
+  "entry_reason": "Entry Reason",
+  "exit_reason": "Exit Reason",
+  "current_stop": "Current Stop (Trailing)",
+  "time": "Time"
+}

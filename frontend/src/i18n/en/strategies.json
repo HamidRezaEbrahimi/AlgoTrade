@@ -1,0 +1,14 @@
+{
+  "title": "Strategy Rules & Logic",
+  "criteria_title": "8-Criteria Scoring System (Minimum 6 Confirmations for Entry):",
+  "crit_1": "1. 4H Market Structure (Higher High / Higher Low or Bullish CHoCH)",
+  "crit_2": "2. Valid Location (Reaction at S/R, Order Block, or 3-Candle FVG)",
+  "crit_3": "3. 1H Candlestick Pattern (Bullish Engulfing, Pin Bar, Hammer, Morning Star)",
+  "crit_4": "4. 15M Momentum Filter (Positive Slope without Negative Divergence)",
+  "crit_5": "5. RSI(14) Confirmation in Standard 40 to 70 Range",
+  "crit_6": "6. Volume Surge Over 10-Period Moving Average (Volume > MA10)",
+  "crit_7": "7. Minimum Risk to Reward Ratio of 1:1.5 (Risk/Reward ≥ 1.5)",
+  "crit_8": "8. Valid Structural Stop Loss Placement",
+  "grid_title": "25-Level Grid Management:",
+  "grid_desc": "Capital distribution across 30-day S/R range; disabled when volatility < 4%."
+}

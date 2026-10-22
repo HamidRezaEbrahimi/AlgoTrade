@@ -1,0 +1,53 @@
+# Risk Management Default Configuration
+# All thresholds configurable — never hardcoded in logic.
+# ─────────────────────────────────────────────
+
+# Position Sizing
+position:
+  max_risk_pct: 1.0           # Max risk per trade (% of capital)
+  max_positions: 4            # Max simultaneous positions
+  max_exposure_pct: 12.0      # Max capital exposure (%)
+
+# Drawdown Circuit Breakers
+drawdown:
+  half_size_pct: 8.0          # Halve new position sizes at this %
+  stop_entry_pct: 12.0        # Stop all new entries at this %
+  reset_period_hours: 24      # Reset drawdown tracking window
+
+# Trailing Stop
+trailing:
+  activation_rr: 1.5          # Move SL to breakeven at this RR
+  partial_close_rr: 2.5       # Close 50% position at this RR
+  partial_close_pct: 50.0     # Percentage to close at partial
+  atr_multiplier: 1.2         # Trail distance = multiplier × ATR(14)
+  atr_period: 14
+
+# Risk/Reward
+risk_reward:
+  min_rr: 1.5                 # Minimum R:R for entry
+
+# Slippage
+slippage:
+  max_slippage_pct: 0.5       # Max allowable slippage (%)
+
+# Stale Data Protection
+stale_data:
+  max_candle_delay_sec: 120   # Reject signal if candle > 2 min old
+
+# Rate Limiting (Exchange API)
+rate_limit:
+  min_interval_sec: 12        # Min seconds between API calls
+  max_retries: 3              # Max retry attempts on rate limit
+  retry_pause_sec: 30         # Pause between retries
+  backoff_factor: 2.0         # Exponential backoff multiplier
+
+# Kill Switch
+kill_switch:
+  close_positions: true       # Also close positions (not just cancel orders)
+  safe_mode: true             # Use limit orders for closing (not market)
+
+# Exit Conditions
+exit:
+  stop_loss: true             # Exit on stop loss hit
+  choch_bearish: true         # Exit on bearish CHoCH (for longs)
+  resistance_rejection: true  # Exit on rejection at resistance/OB/FVG

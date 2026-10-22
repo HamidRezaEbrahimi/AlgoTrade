@@ -1,0 +1,28 @@
+{
+  "header": {
+    "title": "AI Trading Assistant & Market Copilot",
+    "subtitle": "Interactive chat, Smart Money reasoning, and instant trade setup extraction"
+  },
+  "personas": {
+    "title": "Select Agent Persona:",
+    "smc_title": "Smart Money (SMC) Master",
+    "smc_desc": "Structure BOS, CHoCH & Order Blocks",
+    "risk_title": "Risk Management Officer",
+    "risk_desc": "1% Max Risk & Trailing Stop Guard",
+    "scalp_title": "Scalp & Momentum Sniper",
+    "scalp_desc": "Fast Setups based on RSI Crosses"
+  },
+  "chat": {
+    "header_title": "Intelligent Market Reasoning Room",
+    "input_placeholder": "Ask AI Copilot for analysis (e.g. Does BTC meet entry criteria?)...",
+    "btn_send": "Send",
+    "loading_reasoning": "AI analyzing chart and extracting confirmations...",
+    "trade_setup_badge": "AI Recommended Trade Setup",
+    "error_network": "Communication error with AI Agent core. Please retry."
+  },
+  "snapshot": {
+    "active_symbol": "Active System Symbol:",
+    "current_price": "Live Price:",
+    "score": "8-Criteria System Score:"
+  }
+}

@@ -1,0 +1,60 @@
+meta:
+  schema_version: "1.0"
+  strategy_version: "1.0.0"
+  engine:
+    mode: "hybrid_pattern_indicator"
+
+strategy:
+  key: "flag_rsi_pa"
+  names:
+    fa: "پرچم ادامه‌دهنده + پولبک RSI و پرایس‌اکشن"
+    en: "Flag Continuation + RSI Pullback & Price Action"
+  family: "continuation"
+  description:
+    fa: >
+      ترکیب الگوی ادامه‌دهنده پرچم (Flag) با تاییدیه ساختار ۴ ساعته (BOS)،
+      پولبک اندیکاتور RSI به بالای ۵۰ و شکست خط روند با تایید حجم MA10.
+    en: >
+      Combines Flag continuation pattern with 4H bullish structure (BOS),
+      RSI pullback above 50, and trendline breakout confirmed by MA10 volume.
+  tags: ["hybrid", "flag", "price-action", "rsi", "volume"]
+  is_builtin: true
+
+timeframes:
+  structure: "4h"
+  entry: "1h"
+  filter: "15m"
+
+patterns:
+  - "flag_4pt"
+  - "flag_6pt"
+  - "bullish_engulfing"
+
+parameters:
+  min_score: 6
+  min_rr: 1.5
+  rsi_range:
+    long: [48, 70]
+  volume_min_ratio: 1.2
+  require_ai_confirmation: false
+
+entry_conditions:
+  all:
+    - "features.pattern.flag_detected"
+    - "features.structure.bullish_bos"
+    - "features.rsi.above_50"
+    - "features.volume.breakout_confirmed"
+    - "features.rr.gte_1_5"
+
+exit_rules:
+  stop_loss:
+    method: "flag_base_low"
+    margin_pct: 0.2
+  targets:
+    tp1:
+      risk_reward: 1.5
+      auto_breakeven: true
+    tp2:
+      risk_reward: 2.5
+      trailing_stop: true
+      partial_close_pct: 50

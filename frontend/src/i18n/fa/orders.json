@@ -1,0 +1,16 @@
+{
+  "title": "سفارشات و معاملات",
+  "active_positions": "پوزیشن‌های فعال",
+  "history": "تاریخچه معاملات بسته شده",
+  "symbol": "نماد",
+  "exchange": "صرافی",
+  "entry_price": "قیمت ورود",
+  "exit_price": "قیمت خروج",
+  "size": "حجم",
+  "pnl": "سود/زیان",
+  "risk_reward": "R:R واقعی",
+  "entry_reason": "دلیل ورود",
+  "exit_reason": "دلیل خروج",
+  "current_stop": "استاپ فعلی (Trailing)",
+  "time": "زمان"
+}

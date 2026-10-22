@@ -1,0 +1,804 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+title: WaveAI Pattern Definition Schema
+version: 1.1.0
+type: object
+additionalProperties: false
+required:
+  - _meta
+  - _policy_ref
+  - pattern
+  - texts
+  - geometry
+  - ui_editing
+  - numbers
+  - error_catalog
+  - rules
+  - transitions
+  - decision_model
+  - invalidations
+  - lifecycle
+  - quality
+  - entry_setups
+  - outcome_scenarios
+  - feature_catalog
+  - engine_contract
+properties:
+  _meta:
+    $ref: '#/$defs/Meta'
+  _policy_ref:
+    $ref: '#/$defs/PolicyRef'
+  pattern:
+    $ref: '#/$defs/PatternIdentity'
+  texts:
+    type: object
+    additionalProperties: false
+    properties:
+      doc:
+        $ref: '#/$defs/LocalizedText'
+      description:
+        $ref: '#/$defs/LocalizedText'
+      notes:
+        $ref: '#/$defs/LocalizedText'
+      short_fa:
+        type: string
+      short_en:
+        type: string
+      long_fa:
+        type: string
+      long_en:
+        type: string
+    required:
+      - doc
+      - description
+  geometry:
+    type: object
+    additionalProperties: false
+    properties:
+      point_model:
+        type: object
+        additionalProperties: true
+      wave_map:
+        type: object
+        additionalProperties: true
+      explain_fa:
+        type: string
+      explain_en:
+        type: string
+    required:
+      - point_model
+      - explain_fa
+      - explain_en
+  ui_editing:
+    type: object
+    additionalProperties: false
+    properties:
+      editable_sections:
+        type: array
+        items:
+          type: string
+    required:
+      - editable_sections
+  numbers:
+    type: object
+    additionalProperties: false
+    properties:
+      ratios:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          required:
+            - key
+            - title_fa
+            - title_en
+            - display
+            - feature_ref
+          properties:
+            key:
+              type: string
+              pattern: ^[A-Za-z0-9]+(_[A-Za-z0-9]+)*$
+            title_fa:
+              type: string
+            title_en:
+              type: string
+            min:
+              type: number
+            max:
+              type: number
+            typical:
+              type: number
+            display:
+              type: object
+              additionalProperties: false
+              properties:
+                formula_fa:
+                  type: string
+                formula_en:
+                  type: string
+              required:
+                - formula_fa
+                - formula_en
+            feature_ref:
+              type: string
+      thresholds:
+        type: array
+        items:
+          oneOf:
+            - type: object
+              additionalProperties: false
+              required:
+                - key
+                - title_fa
+                - title_en
+                - min
+                - typical
+                - levels
+                - feature_ref
+              properties:
+                key:
+                  type: string
+                title_fa:
+                  type: string
+                title_en:
+                  type: string
+                min:
+                  type: number
+                typical:
+                  type: number
+                levels:
+                  type: object
+                  additionalProperties: true
+                feature_ref:
+                  type: string
+            - type: object
+              additionalProperties: false
+              required:
+                - key
+                - value
+              properties:
+                key:
+                  type: string
+                value:
+                  type: number
+                unit:
+                  type: string
+                desc_fa:
+                  type: string
+                desc_en:
+                  type: string
+                feature_ref:
+                  type: string
+      probabilities:
+        type: object
+        additionalProperties: false
+        properties:
+          occurrence:
+            type: object
+            additionalProperties: false
+            properties:
+              value:
+                type:
+                  - number
+                  - 'null'
+              text_fa:
+                type: string
+              text_en:
+                type: string
+          success:
+            type: object
+            additionalProperties: false
+            properties:
+              value:
+                type:
+                  - number
+                  - 'null'
+              text_fa:
+                type: string
+              text_en:
+                type: string
+      success_profiles:
+        type: object
+        additionalProperties: true
+    required:
+      - ratios
+      - thresholds
+  error_catalog:
+    type: object
+    additionalProperties: false
+    properties:
+      structure:
+        type: array
+        items:
+          type: object
+          additionalProperties: true
+      ratios:
+        type: array
+        items:
+          type: object
+          additionalProperties: true
+      completion:
+        type: array
+        items:
+          type: object
+          additionalProperties: true
+      quality:
+        type: array
+        items:
+          type: object
+          additionalProperties: true
+      scenarios:
+        type: array
+        items:
+          type: object
+          additionalProperties: true
+  rules:
+    type: object
+    additionalProperties: true
+    properties:
+      structure:
+        type: array
+        items:
+          $ref: '#/$defs/Rule'
+        default: []
+      ratios:
+        type: array
+        items:
+          $ref: '#/$defs/Rule'
+        default: []
+      completion:
+        type: array
+        items:
+          $ref: '#/$defs/Rule'
+        default: []
+      meta:
+        type: array
+        items:
+          $ref: '#/$defs/Rule'
+        default: []
+  transitions:
+    type: object
+    additionalProperties: false
+    properties:
+      can_morph_to:
+        type: array
+        items:
+          type: object
+          additionalProperties: true
+      can_transition_to:
+        type: array
+        items:
+          type: string
+      notes_fa:
+        type: string
+      notes_en:
+        type: string
+      transition_rules:
+        type: array
+        items:
+          type: object
+          additionalProperties: true
+  decision_model:
+    type: object
+    additionalProperties: false
+    required:
+      - order
+    properties:
+      order:
+        type: array
+        items:
+          type: string
+          enum:
+            - exclude
+            - invalid
+            - morph
+            - valid
+      notes_fa:
+        type: string
+      notes_en:
+        type: string
+  invalidations:
+    type: object
+    additionalProperties: true
+    properties:
+      text_fa:
+        type: array
+        items:
+          type: string
+      text_en:
+        type: array
+        items:
+          type: string
+      rules:
+        type: array
+        items:
+          $ref: '#/$defs/InvalidationRule'
+        default: []
+  lifecycle:
+    type: object
+    additionalProperties: false
+    properties:
+      explain_fa:
+        type: string
+      explain_en:
+        type: string
+      min_points:
+        type: integer
+        minimum: 0
+      stages:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          required:
+            - key
+            - when_cel
+          properties:
+            key:
+              type: string
+            when_cel:
+              $ref: '#/$defs/CELExpr'
+    required:
+      - min_points
+      - stages
+  quality:
+    type: object
+    additionalProperties: true
+    properties:
+      strength:
+        type: object
+        additionalProperties: true
+        properties:
+          model:
+            type: string
+          weights:
+            type: object
+            additionalProperties:
+              type: number
+          thresholds:
+            type: object
+            additionalProperties:
+              type: number
+      confidence:
+        type: object
+        additionalProperties: true
+        properties:
+          model:
+            type: string
+          factors:
+            type: object
+            additionalProperties:
+              type: number
+          thresholds:
+            type: object
+            additionalProperties:
+              type: number
+      risk_flags:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          required:
+            - id
+            - level
+            - when_cel
+            - message_fa
+            - message_en
+          properties:
+            id:
+              type: string
+            level:
+              type: string
+              enum:
+                - low
+                - medium
+                - high
+                - ultra_high
+                - info
+                - warning
+            error_code:
+              type: string
+            when_cel:
+              $ref: '#/$defs/CELExpr'
+            message_fa:
+              type: string
+            message_en:
+              type: string
+        default: []
+  entry_setups:
+    type: array
+    items:
+      $ref: '#/$defs/EntrySetup'
+    default: []
+  outcome_scenarios:
+    type: array
+    items:
+      $ref: '#/$defs/OutcomeScenario'
+  feature_catalog:
+    type: object
+    additionalProperties: true
+  validation_tests:
+    type: array
+    items:
+      type: object
+      additionalProperties: true
+    default: []
+  examples:
+    type: array
+    items:
+      type: object
+      additionalProperties: true
+    default: []
+  engine_contract:
+    type: object
+    additionalProperties: true
+    properties:
+      scenario_resolution:
+        type: object
+        additionalProperties: true
+        properties:
+          mode:
+            type: string
+            enum:
+              - first_match_by_priority
+      decision_resolution:
+        type: object
+        additionalProperties: true
+        properties:
+          mode:
+            type: string
+            enum:
+              - first_match_by_order
+          order_ref:
+            type: string
+          behavior:
+            type: object
+            additionalProperties: true
+      required_feature_paths:
+        type: array
+        items:
+          type: string
+      required_context_paths:
+        type: array
+        items:
+          type: string
+  legacy:
+    type: object
+    additionalProperties: true
+  notes_fa:
+    type: string
+  notes_en:
+    type: string
+  classification:
+    type: object
+    additionalProperties: true
+  ui_defaults:
+    type: object
+    additionalProperties: true
+  variants:
+    type: array
+    items:
+      type: object
+      additionalProperties: true
+  outcome_rules_ref:
+    type: array
+    items:
+      type: string
+$defs:
+  LocalizedText:
+    type: object
+    additionalProperties: false
+    properties:
+      fa:
+        type: string
+      en:
+        type: string
+    required:
+      - fa
+      - en
+  PolicyRef:
+    type: object
+    additionalProperties: false
+    required:
+      - use
+    properties:
+      use:
+        type: string
+      overrides:
+        type: array
+        items:
+          type: object
+        default: []
+  Meta:
+    type: object
+    additionalProperties: false
+    required:
+      - schema_version
+      - pattern_version
+      - updated_at
+      - source
+      - engine
+    properties:
+      schema_version:
+        type: string
+      pattern_version:
+        type: string
+      updated_at:
+        type: string
+      source:
+        type: string
+      engine:
+        type: object
+        additionalProperties: false
+        required:
+          - expr_lang
+          - mode
+        properties:
+          expr_lang:
+            type: string
+            enum:
+              - cel
+          mode:
+            type: string
+  PatternIdentity:
+    type: object
+    additionalProperties: false
+    required:
+      - key
+      - id
+      - family
+      - subtype
+      - names
+    properties:
+      key:
+        type: string
+      id:
+        type: integer
+      family:
+        type: string
+      subtype:
+        type: string
+      names:
+        $ref: '#/$defs/LocalizedText'
+  CELExpr:
+    type: string
+  UIBlock:
+    type: object
+    additionalProperties: true
+  EntrySetup:
+    type: object
+    additionalProperties: false
+    required:
+      - code
+      - label_fa
+      - label_en
+      - trigger_fa
+      - trigger_en
+    properties:
+      code:
+        type: string
+      label_fa:
+        type: string
+      label_en:
+        type: string
+      trigger_fa:
+        type: string
+      trigger_en:
+        type: string
+      stop_loss_fa:
+        type: array
+        items:
+          type: string
+        default: []
+      stop_loss_en:
+        type: array
+        items:
+          type: string
+        default: []
+      risk_reward_fa:
+        type: string
+      risk_reward_en:
+        type: string
+      pros_fa:
+        type: array
+        items:
+          type: string
+        default: []
+      pros_en:
+        type: array
+        items:
+          type: string
+        default: []
+      cons_fa:
+        type: array
+        items:
+          type: string
+        default: []
+      cons_en:
+        type: array
+        items:
+          type: string
+        default: []
+      allowed_live_fa:
+        type: string
+      allowed_live_en:
+        type: string
+      editable:
+        type: boolean
+  Outcome:
+    type: object
+    additionalProperties: false
+    required:
+      - comp
+      - valid
+      - succ
+      - mark
+      - risk_override
+      - strength_override
+      - reason_code
+    properties:
+      comp:
+        type: boolean
+      valid:
+        type: boolean
+      succ:
+        type: boolean
+      mark:
+        type: boolean
+      risk_override:
+        type: string
+        enum:
+          - low
+          - medium
+          - high
+          - ultra_high
+      reward_override:
+        type: string
+        enum:
+          - low
+          - medium
+          - high
+      strength_override:
+        type: string
+        enum:
+          - weak
+          - normal
+          - strong
+          - over_extended
+          - auto
+          - PENDING
+      reason_code:
+        type: string
+      description_fa:
+        type: string
+      description_en:
+        type: string
+  ScenarioConditions:
+    type: object
+    additionalProperties: true
+  OutcomeScenario:
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - priority
+      - outcome
+    properties:
+      id:
+        type: string
+        pattern: ^[A-Z][A-Z0-9_]+$
+      priority:
+        type: integer
+        minimum: 0
+        maximum: 99
+      requires_metrics:
+        type: array
+        items:
+          type: string
+        default: []
+      conditions:
+        $ref: '#/$defs/ScenarioConditions'
+      conditions_cel:
+        type: object
+        additionalProperties: false
+        properties:
+          all:
+            type: array
+            items:
+              $ref: '#/$defs/CELExpr'
+            default: []
+          any:
+            type: array
+            items:
+              $ref: '#/$defs/CELExpr'
+            default: []
+          none:
+            type: array
+            items:
+              $ref: '#/$defs/CELExpr'
+            default: []
+      outcome:
+        $ref: '#/$defs/Outcome'
+  Rule:
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - severity
+      - title_fa
+      - title_en
+      - expr_cel
+      - message_fa
+      - message_en
+    properties:
+      id:
+        type: string
+      severity:
+        type: string
+        enum:
+          - fail
+          - warn
+          - info
+      error_code:
+        type: string
+      title_fa:
+        type: string
+      title_en:
+        type: string
+      expr_cel:
+        $ref: '#/$defs/CELExpr'
+      message_fa:
+        type: string
+      message_en:
+        type: string
+  InvalidationRule:
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - when_cel
+      - decision
+      - message_fa
+      - message_en
+    properties:
+      id:
+        type: string
+      error_code:
+        type: string
+      when_cel:
+        $ref: '#/$defs/CELExpr'
+      decision:
+        type: object
+        additionalProperties: false
+        required:
+          - kind
+          - reason_code
+        properties:
+          kind:
+            type: string
+            enum:
+              - exclude
+              - invalid
+              - morph
+          target_key:
+            type: string
+          reason_code:
+            type: string
+      ui:
+        $ref: '#/$defs/UIBlock'
+      message_fa:
+        type: string
+      message_en:
+        type: string
+      kind:
+        type: string
+      path:
+        type: string
+      to:
+        type: string
+      when:
+        type: object
+        additionalProperties: true
+      notes_fa:
+        type: string
+      notes_en:
+        type: string

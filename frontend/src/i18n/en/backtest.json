@@ -1,0 +1,16 @@
+{
+  "title": "Backtesting Simulator",
+  "subtitle": "Accurate simulation without Look-ahead bias, modeling fees, slippage, and partial exits",
+  "symbol": "Symbol",
+  "initial_capital": "Initial Capital ($)",
+  "fee_rate": "Fee Rate (%)",
+  "slippage_rate": "Slippage Rate (%)",
+  "run_button": "Run Backtest",
+  "running": "Processing historical bars...",
+  "win_rate": "Win Rate",
+  "profit_factor": "Profit Factor",
+  "max_drawdown": "Max Drawdown",
+  "total_trades": "Total Trades",
+  "total_pnl": "Total PnL ($)",
+  "equity_chart": "Backtest Equity Growth Curve"
+}

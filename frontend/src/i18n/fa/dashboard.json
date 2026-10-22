@@ -1,0 +1,21 @@
+{
+  "title": "داشبورد معاملات الگوریتمی",
+  "total_balance": "موجودی کل",
+  "available_balance": "موجودی آزاد",
+  "pnl_today": "سود/زیان امروز",
+  "pnl_percent": "درصد بازدهی",
+  "win_rate": "نرخ برد (Win Rate)",
+  "profit_factor": "فاکتور سود",
+  "max_drawdown": "حداکثر افت سرمایه",
+  "current_drawdown": "افت سرمایه فعلی",
+  "active_positions": "پوزیشن‌های فعال",
+  "no_active_positions": "در حال حاضر هیچ پوزیشن بازی وجود ندارد.",
+  "equity_curve": "نمودار رشد سرمایه",
+  "trading_mode": "حالت معاملاتی",
+  "paper_trading": "شبیه‌سازی (Paper Trading)",
+  "live_trading": "معاملات واقعی (Live)",
+  "circuit_breaker": "کلید قطع خودکار (Circuit Breaker)",
+  "normal": "نرمال (ریسک ۱٪)",
+  "half_size": "حجم نصف (ریسک ۰.۵٪ در افت ۸٪)",
+  "halted": "متوقف (افت ۱۲٪)"
+}

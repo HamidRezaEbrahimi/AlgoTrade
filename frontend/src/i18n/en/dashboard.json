@@ -1,0 +1,21 @@
+{
+  "title": "Algorithmic Trading Dashboard",
+  "total_balance": "Total Balance",
+  "available_balance": "Available Balance",
+  "pnl_today": "Today's PnL",
+  "pnl_percent": "Daily Return",
+  "win_rate": "Win Rate",
+  "profit_factor": "Profit Factor",
+  "max_drawdown": "Max Drawdown",
+  "current_drawdown": "Current Drawdown",
+  "active_positions": "Active Positions",
+  "no_active_positions": "No open positions currently active.",
+  "equity_curve": "Equity Growth Curve",
+  "trading_mode": "Trading Mode",
+  "paper_trading": "Simulation (Paper Trading)",
+  "live_trading": "Live Trading",
+  "circuit_breaker": "Circuit Breaker",
+  "normal": "Normal (1% Risk)",
+  "half_size": "Half Size (0.5% Risk at 8% DD)",
+  "halted": "Halted (12% DD)"
+}

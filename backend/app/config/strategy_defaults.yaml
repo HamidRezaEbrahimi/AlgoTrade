@@ -1,0 +1,58 @@
+# Strategy Default Configuration
+# All thresholds configurable — never hardcoded in logic.
+# ─────────────────────────────────────────────
+
+# Multi-Timeframe Analysis
+timeframes:
+  structure: "4h"       # Market structure direction
+  entry: "1h"           # Entry pattern detection
+  momentum: "15m"       # Final momentum filter
+
+# Structure Analysis (4H)
+structure:
+  swing_lookback: 20    # Bars to detect swing points
+  bos_min_candles: 3    # Minimum candles for BOS confirmation
+  choch_min_candles: 2  # Minimum candles for CHoCH
+
+# Entry Patterns (1H)
+patterns:
+  engulfing_body_ratio: 1.0   # Min body ratio vs previous candle
+  pin_bar_wick_ratio: 2.0     # Min wick-to-body ratio
+  hammer_body_pct: 0.33       # Max body as % of total range
+  morning_star_gap: false     # Require gap (false for crypto)
+
+# Momentum Filter (15M)
+momentum:
+  rsi_period: 14
+  rsi_oversold: 30            # Long entry zone
+  rsi_overbought: 70          # Short entry zone
+  volume_ma_period: 10        # Volume moving average period
+  volume_min_ratio: 1.0       # Min volume/MA(10) ratio
+
+# Signal Scoring
+scoring:
+  min_score: 6                # Minimum out of 8 criteria
+  criteria_count: 8
+
+# Level Detection
+levels:
+  sr_lookback: 100            # Bars for S/R detection
+  sr_touch_count: 2           # Min touches to confirm level
+  ob_max_candles: 5           # Max candles for Order Block zone
+  fvg_min_gap_pct: 0.1        # Min FVG gap as % of price
+
+# Grid Management
+grid:
+  levels: 25                  # Number of grid levels
+  range_period_days: 30       # Days for S/R range calculation
+  min_range_pct: 4.0          # Disable grid if range < this %
+
+# Market Scanning
+scanner:
+  interval_minutes: 15        # Scan interval (after candle close)
+  min_volume_usd: 100000      # Min 24h volume (USD)
+  max_symbols: 50             # Max symbols to scan
+
+# Candle Buffer
+buffer:
+  max_candles: 1000           # Ring buffer capacity per symbol/TF

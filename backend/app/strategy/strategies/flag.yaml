@@ -1,0 +1,167 @@
+meta:
+  schema_version: "1.0"
+  strategy_version: "1.0.0"
+  source: "config/patterns/flag.yaml"
+  engine:
+    mode: "wave_pattern"
+
+strategy:
+  key: "flag"
+  names:
+    fa: "فلگ (پرچم)"
+    en: "Flag"
+  family: "continuation"
+  description:
+    fa: >
+      الگوی ادامه‌دهنده فلگ (پرچم).
+      اصلاح کم‌عمق (کمتر از ۳۰٪ ایمپالس اول).
+      واریانت ۴ نقطه: retracement <= 11%.
+      واریانت ۶ نقطه: retracement 11-30%.
+      ورود پس از عبور ایمپالس ۲ از سطح P4.
+    en: >
+      Flag continuation pattern. Shallow retracement (< 30% of impulse 1).
+      4-point variant: retracement <= 11%. 6-point variant: 11-30%.
+      Entry after impulse 2 crosses P4 level.
+  tags: ["continuation", "flag", "wave-pattern"]
+  is_builtin: true
+
+geometry:
+  point_model: "6pt"
+  points: ["P0", "P1", "P2", "P3", "P4", "P5"]
+  wave_map:
+    impulse1: { start: "P0", end: "P1" }
+    A: { start: "P1", end: "P2" }
+    B: { start: "P2", end: "P3" }
+    C: { start: "P3", end: "P4" }
+    impulse2: { start: "P4", end: "P5" }
+
+parameters:
+  max_retracement_4pt: 0.11
+  max_retracement_6pt: 0.30
+  min_rr_entry_b: 1.0
+  min_slope_weak: 0.7
+  min_slope_normal: 1.0
+  min_slope_strong: 1.2
+
+variants:
+  - key: "flag_4pt"
+    is_default: true
+    point_count: 4
+    names: { fa: "فلگ ۴نقطه", en: "Flag 4pt" }
+    rules:
+      - id: "flag4_retr"
+        severity: "fail"
+        expr: "features.metrics.wave_a_retr <= 0.11"
+        title_fa: "اصلاح باید کمتر از ۱۱٪ باشد"
+        title_en: "Retracement must be <= 11%"
+  - key: "flag_6pt"
+    point_count: 6
+    names: { fa: "فلگ ۶نقطه", en: "Flag 6pt" }
+    rules:
+      - id: "flag6_retr"
+        severity: "fail"
+        expr: "features.metrics.wave_a_retr > 0.11"
+        title_fa: "اصلاح باید بیشتر از ۱۱٪ باشد"
+        title_en: "Retracement must be > 11%"
+      - id: "flag6_max"
+        severity: "fail"
+        expr: "features.metrics.wave_a_retr <= 0.30"
+        title_fa: "اصلاح باید کمتر از ۳۰٪ باشد"
+        title_en: "Retracement must be <= 30%"
+
+entry_conditions:
+  all:
+    - "features.structure_valid"
+    - "features.direction.i2_opposes_C"
+    - "features.completion.i2_crossed_P4"
+    - "features.rr.by_entry.entry_b >= 1.0"
+
+exit_rules:
+  stop_loss:
+    method: "wave_origin"
+    reference_point: "P0"
+  trailing:
+    activate_at_rr: 1.5
+    partial_close_at_rr: 2.5
+    partial_close_pct: 50
+    trail_distance: "1.2_atr"
+  targets:
+    tp1_rr: 1.5
+    tp2_rr: 2.5
+
+outcome_scenarios:
+  - id: "IDEAL_FLAG"
+    priority: 10
+    conditions:
+      all:
+        - "features.structure_valid"
+        - "features.direction.i2_opposes_C"
+        - "features.completion.i2_crossed_P4"
+        - "features.impulses.i2_slope_ratio >= 1.0"
+        - "features.rr.by_entry.entry_b >= 1.5"
+    outcome:
+      strength: "strong"
+      risk: "low"
+      reward: "high"
+      confidence: 88
+      reason_fa: "🏆 فلگ ایده‌آل: شیب قوی و RR بالا"
+      reason_en: "Ideal flag: strong slope with high RR"
+
+  - id: "STRONG_FLAG"
+    priority: 20
+    conditions:
+      all:
+        - "features.structure_valid"
+        - "features.direction.i2_opposes_C"
+        - "features.completion.i2_crossed_P4"
+        - "features.impulses.i2_slope_ratio >= 1.2"
+    outcome:
+      strength: "strong"
+      risk: "low"
+      reward: "high"
+      confidence: 82
+      reason_fa: "✅ فلگ قوی: شیب بالای ۱.۲"
+      reason_en: "Strong flag: slope >= 1.2"
+
+  - id: "NORMAL_FLAG"
+    priority: 30
+    conditions:
+      all:
+        - "features.structure_valid"
+        - "features.direction.i2_opposes_C"
+        - "features.completion.i2_crossed_P4"
+        - "features.impulses.i2_slope_ratio >= 0.7"
+    outcome:
+      strength: "normal"
+      risk: "medium"
+      reward: "medium"
+      confidence: 65
+      reason_fa: "✅ فلگ عادی"
+      reason_en: "Normal flag"
+
+  - id: "WEAK_FLAG"
+    priority: 40
+    conditions:
+      all:
+        - "features.structure_valid"
+        - "features.completion.i2_crossed_P4"
+        - "features.impulses.i2_slope_ratio < 0.7"
+    outcome:
+      strength: "weak"
+      risk: "medium"
+      reward: "low"
+      confidence: 35
+      reason_fa: "⚠️ فلگ ضعیف: شیب پایین"
+      reason_en: "Weak flag: low slope"
+
+  - id: "FALLBACK_FLAG"
+    priority: 999
+    conditions:
+      all: []
+    outcome:
+      strength: "weak"
+      risk: "high"
+      reward: "low"
+      confidence: 10
+      reason_fa: "ℹ️ پیش‌فرض"
+      reason_en: "Fallback"

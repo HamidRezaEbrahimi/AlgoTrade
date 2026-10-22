@@ -1,0 +1,131 @@
+meta:
+  schema_version: "1.0"
+  strategy_version: "1.0.0"
+  source: "config/patterns/wedge.yaml"
+  engine:
+    mode: "wave_pattern"
+
+strategy:
+  key: "wedge"
+  names:
+    fa: "ویج (گوه)"
+    en: "Wedge"
+  family: "reversal"
+  description:
+    fa: >
+      الگوی بازگشتی ویج (گوه). خطوط روند همگرا با حداقل ۵ نقطه تماس.
+      پس از شکست خط روند و عبور ایمپالس ۲ از P4، سیگنال ورود صادر می‌شود.
+      ریسک به ریوارد بالایی دارد چون شکست ویج معمولاً قوی است.
+    en: >
+      Wedge reversal pattern. Converging trendlines with 5+ touch points.
+      Entry after trendline break and impulse 2 crossing P4.
+      High RR potential due to typically strong breakouts.
+  tags: ["reversal", "wedge", "wave-pattern"]
+  is_builtin: true
+
+geometry:
+  point_model: "6pt"
+  points: ["P0", "P1", "P2", "P3", "P4", "P5"]
+  wave_map:
+    impulse1: { start: "P0", end: "P1" }
+    A: { start: "P1", end: "P2" }
+    B: { start: "P2", end: "P3" }
+    C: { start: "P3", end: "P4" }
+    impulse2: { start: "P4", end: "P5" }
+
+parameters:
+  min_touch_count: 5
+  min_rr_entry_b: 1.0
+  min_slope_weak: 0.7
+  min_slope_normal: 1.0
+  min_slope_strong: 1.2
+
+rules:
+  structure:
+    - id: "convergence"
+      severity: "fail"
+      expr: "features.structure_valid"
+      title_fa: "خطوط روند باید همگرا باشند"
+      title_en: "Trendlines must converge"
+
+entry_conditions:
+  all:
+    - "features.structure_valid"
+    - "features.direction.i2_opposes_C"
+    - "features.completion.i2_crossed_P4"
+    - "features.rr.by_entry.entry_b >= 1.0"
+
+exit_rules:
+  stop_loss:
+    method: "wave_origin"
+    reference_point: "P0"
+  trailing:
+    activate_at_rr: 1.5
+    partial_close_at_rr: 2.5
+    partial_close_pct: 50
+    trail_distance: "1.2_atr"
+  targets:
+    tp1_rr: 1.5
+    tp2_rr: 2.5
+
+outcome_scenarios:
+  - id: "IDEAL_WEDGE"
+    priority: 10
+    conditions:
+      all:
+        - "features.structure_valid"
+        - "features.direction.i2_opposes_C"
+        - "features.completion.i2_crossed_P4"
+        - "features.impulses.i2_slope_ratio >= 1.0"
+        - "features.rr.by_entry.entry_b >= 1.5"
+    outcome:
+      strength: "strong"
+      risk: "low"
+      reward: "high"
+      confidence: 90
+      reason_fa: "🏆 ویج ایده‌آل: شکست قوی با RR بالا"
+      reason_en: "Ideal wedge: strong break with high RR"
+
+  - id: "STRONG_WEDGE"
+    priority: 20
+    conditions:
+      all:
+        - "features.structure_valid"
+        - "features.direction.i2_opposes_C"
+        - "features.completion.i2_crossed_P4"
+        - "features.impulses.i2_slope_ratio >= 1.2"
+    outcome:
+      strength: "strong"
+      risk: "low"
+      reward: "high"
+      confidence: 82
+      reason_fa: "✅ ویج قوی: شیب بالای ۱.۲"
+      reason_en: "Strong wedge: slope >= 1.2"
+
+  - id: "NORMAL_WEDGE"
+    priority: 30
+    conditions:
+      all:
+        - "features.structure_valid"
+        - "features.direction.i2_opposes_C"
+        - "features.completion.i2_crossed_P4"
+        - "features.impulses.i2_slope_ratio >= 0.7"
+    outcome:
+      strength: "normal"
+      risk: "medium"
+      reward: "medium"
+      confidence: 65
+      reason_fa: "✅ ویج عادی"
+      reason_en: "Normal wedge"
+
+  - id: "FALLBACK_WEDGE"
+    priority: 999
+    conditions:
+      all: []
+    outcome:
+      strength: "weak"
+      risk: "high"
+      reward: "low"
+      confidence: 10
+      reason_fa: "ℹ️ پیش‌فرض"
+      reason_en: "Fallback"

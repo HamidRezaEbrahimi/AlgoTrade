@@ -1,0 +1,107 @@
+meta:
+  schema_version: "1.0"
+  strategy_version: "1.0.0"
+  engine:
+    mode: "price_action"
+
+strategy:
+  key: "price_action_8criteria"
+  names:
+    fa: "پرایس‌اکشن ۸ معیاره"
+    en: "Price Action 8-Criteria"
+  family: "price_action"
+  description:
+    fa: >
+      استراتژی اصلی سیستم: ورود بر اساس ۸ معیار تأییدی چندتایم‌فریمه.
+      ساختار ۴ ساعته، الگوی ۱ ساعته، فیلتر مومنتوم ۱۵ دقیقه،
+      RSI، حجم، نسبت ریسک به ریوارد و حد ضرر ساختاری.
+    en: >
+      Main system strategy: entry based on 8 multi-timeframe confirmations.
+      4H structure, 1H pattern, 15M momentum filter,
+      RSI, volume, risk/reward ratio and structural stop loss.
+  tags: ["builtin", "multi-timeframe", "price-action"]
+  is_builtin: true
+
+parameters:
+  min_score: 6
+  min_rr: 1.5
+  rsi_range:
+    long: [40, 70]
+    short: [30, 60]
+  volume_period: 10
+  volume_min_ratio: 1.0
+  stop_lookback: 5
+  stop_margin_pct: 0.2
+  max_stop_distance_pct: 8.0
+
+entry_conditions:
+  all:
+    - "features.structure.valid"
+    - "features.pattern.confirmed"
+    - "features.rsi.confirmed"
+    - "features.volume.confirmed"
+    - "features.rr.confirmed"
+    - "features.risk.stop_valid"
+
+exit_rules:
+  stop_loss:
+    method: "structural"
+    lookback_bars: 5
+    margin_pct: 0.2
+  trailing:
+    activate_at_rr: 1.5
+    partial_close_at_rr: 2.5
+    partial_close_pct: 50
+    trail_distance: "1.2_atr"
+  targets:
+    tp1_rr: 1.5
+    tp2_rr: 2.5
+
+outcome_scenarios:
+  - id: "IDEAL_8CRITERIA"
+    priority: 10
+    conditions:
+      all:
+        - "features.structure.has_bos"
+        - "features.location.valid"
+        - "features.pattern.confirmed"
+        - "features.momentum.confirmed"
+        - "features.rsi.confirmed"
+        - "features.volume.confirmed"
+        - "features.rr.value >= 2.0"
+        - "features.risk.stop_valid"
+    outcome:
+      strength: "strong"
+      risk: "low"
+      reward: "high"
+      confidence: 90
+      reason_fa: "🏆 سیگنال ایده‌آل: ۸ از ۸ تأیید با RR بالای ۲"
+      reason_en: "Ideal signal: 8/8 confirmed with RR > 2"
+
+  - id: "STRONG_7OF8"
+    priority: 20
+    conditions:
+      all:
+        - "features.structure.valid"
+        - "features.pattern.confirmed"
+        - "features.rr.confirmed"
+        - "features.risk.stop_valid"
+    outcome:
+      strength: "normal"
+      risk: "medium"
+      reward: "medium"
+      confidence: 72
+      reason_fa: "✅ سیگنال معتبر: حداقل ۶ تأیید از ۸"
+      reason_en: "Valid signal: minimum 6/8 confirmed"
+
+  - id: "FALLBACK_REJECT"
+    priority: 999
+    conditions:
+      all: []
+    outcome:
+      strength: "weak"
+      risk: "high"
+      reward: "low"
+      confidence: 15
+      reason_fa: "❌ شرایط ورود ناکافی"
+      reason_en: "Insufficient entry conditions"

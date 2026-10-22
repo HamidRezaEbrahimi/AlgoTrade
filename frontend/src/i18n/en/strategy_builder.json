@@ -1,0 +1,87 @@
+{
+  "header": {
+    "title": "Multi-Layer Strategy & Pattern Builder",
+    "subtitle": "Modular separation of pattern recognition, price action indicators, and AI validation gate",
+    "btn_backtest": "Transfer to Historical Backtest",
+    "btn_save": "Save Hybrid Strategy"
+  },
+  "tabs": {
+    "tab_patterns": "1. Patterns & Structure",
+    "tab_indicators": "2. Filters & AI Gate",
+    "tab_risk": "3. Risk & Exit Rules",
+    "tab_registry": "4. Active Strategies",
+    "btn_next": "Next Step",
+    "btn_prev": "Previous Step"
+  },
+  "presets": {
+    "title": "Pre-Optimized Strategy Presets",
+    "subtitle": "(Click any card to instantly load its configuration into the builder)",
+    "load_cta": "Load into Form"
+  },
+  "step1": {
+    "title": "Strategy Identity & Timeframes",
+    "name_label": "Strategy Name:",
+    "key_label": "Unique Key:",
+    "tf_structure": "Structure Timeframe (Trend):",
+    "tf_entry": "Pattern & Entry Timeframe:",
+    "tf_filter": "Momentum Filter Timeframe:"
+  },
+  "layer1": {
+    "title": "Layer 1: Chart Pattern Recognition",
+    "subtitle": "You can select multiple patterns individually or in combination",
+    "group_structure": "Structure & Price Action",
+    "chk_bos": "Structure Breakout (Bullish BOS / CHoCH)",
+    "chk_ob": "Demand Order Block (OB)",
+    "chk_fvg": "Fair Value Gap (FVG Mitigation)",
+    "chk_sr": "30-Day Support/Resistance Levels",
+    "group_geometry": "Geometric & Wave Formations",
+    "chk_flag": "Flag Continuation Pattern (4pt / 6pt)",
+    "chk_flat": "Regular Flat Wave Model (6-Point)",
+    "chk_wedge": "Wedge Reversal Pattern",
+    "group_candlestick": "Trigger Candlesticks",
+    "chk_engulfing": "Bullish Engulfing",
+    "chk_pinbar": "Bullish Pin Bar",
+    "chk_hammer": "Hammer Pattern",
+    "chk_morning_star": "Morning Star Pattern"
+  },
+  "layer2": {
+    "title": "Layer 2: Indicator, Volume & Scoring Filters",
+    "rsi_title": "Allowed RSI(14) Range:",
+    "rsi_desc": "Enter in non-overbought zone to guarantee upside headroom",
+    "volume_title": "Volume Confirmation Filter:",
+    "volume_chk": "Trigger Volume > MA10 Volume",
+    "volume_desc": "Confirms institutional liquidity inflow on breakout",
+    "score_title": "Minimum Score Required:",
+    "score_5": "5 of 8 (Minimum)",
+    "score_6": "6 of 8 (System Standard)",
+    "score_7": "7 of 8 (Conservative)",
+    "score_8": "8 of 8 (Strict All)"
+  },
+  "layer3": {
+    "title": "Layer 3: AI Agent Validation Gate",
+    "btn_active": "AI Confirmation: Active ✓",
+    "btn_inactive": "AI Confirmation: Disabled",
+    "desc_active": "✅ AI Trading Copilot evaluates market context and SMC structure before issuing final entry authorization.",
+    "desc_inactive": "Enable AI Confirmation to require analytical approval from the AI Copilot before opening positions."
+  },
+  "layer4": {
+    "title": "Layer 4: Stop Loss, Targets & Exit Rules",
+    "sl_title": "Stop Loss Placement Method",
+    "sl_swing": "Below Price Action Swing Low",
+    "sl_atr": "Based on Volatility (1.5 * ATR)",
+    "min_rr": "Minimum R:R Ratio:",
+    "tp1_title": "Target 1 (TP1)",
+    "tp1_ratio": "Risk/Reward Multiplier:",
+    "tp1_breakeven": "Auto Move Stop to Breakeven (Risk-Free)",
+    "tp2_title": "Target 2 (TP2)",
+    "tp2_ratio": "Risk/Reward Multiplier:",
+    "tp2_trailing": "50% Partial Close & Activate Trailing Stop"
+  },
+  "registry": {
+    "title": "Active Strategies in Registry",
+    "loading": "Loading strategy registry...",
+    "builtin_tag": "Built-in",
+    "custom_tag": "Custom",
+    "status_active": "Active in Trading Engine ✓"
+  }
+}

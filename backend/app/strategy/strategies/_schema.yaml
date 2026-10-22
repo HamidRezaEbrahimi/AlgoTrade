@@ -1,0 +1,92 @@
+# Strategy YAML Schema v1.0
+# Every strategy YAML file must follow this structure.
+
+# ─── Required Top-Level Keys ───
+# meta:           Versioning and authorship metadata
+# strategy:       Identity (key, names, family)
+# entry_conditions: Conditions block (all/any/none) for signal generation
+# exit_rules:     Stop loss, trailing, and target definitions
+# outcome_scenarios: Priority-ordered scenario matching (first_match)
+# parameters:     Configurable thresholds (editable by user)
+
+# ─── Example Skeleton ───
+# meta:
+#   schema_version: "1.0"
+#   strategy_version: "1.0.0"
+#   engine: { mode: "price_action" | "wave_pattern" }
+#
+# strategy:
+#   key: "my_strategy"
+#   names: { fa: "استراتژی من", en: "My Strategy" }
+#   family: "price_action" | "corrective" | "reversal" | "custom"
+#   description: { fa: "...", en: "..." }
+#   tags: ["momentum", "trend"]
+#
+# parameters:
+#   min_score: 6
+#   min_rr: 1.5
+#   rsi_range: { long: [40, 70], short: [30, 60] }
+#   volume_period: 10
+#   ...any custom key-value pairs...
+#
+# entry_conditions:
+#   all:
+#     - "features.structure.valid"
+#     - "features.pattern.confirmed"
+#     - "features.rr.value >= 1.5"
+#   any: []
+#   none:
+#     - "features.invalidated"
+#
+# exit_rules:
+#   stop_loss:
+#     method: "structural"  # or "atr_multiple", "fixed_pct"
+#     atr_multiplier: 1.2
+#   trailing:
+#     activate_at_rr: 1.5
+#     partial_close_at_rr: 2.5
+#     partial_close_pct: 50
+#     trail_distance: "1.2_atr"
+#   targets:
+#     tp1_rr: 1.5
+#     tp2_rr: 2.5
+#
+# outcome_scenarios:
+#   - id: "IDEAL_ENTRY"
+#     priority: 10
+#     conditions:
+#       all:
+#         - "features.rr.value >= 2.0"
+#         - "features.momentum.confirmed"
+#     outcome:
+#       strength: "strong"
+#       risk: "low"
+#       reward: "high"
+#       confidence: 85
+#       reason_fa: "ورود ایده‌آل"
+#       reason_en: "Ideal entry"
+#
+#   - id: "NORMAL_ENTRY"
+#     priority: 20
+#     conditions:
+#       all:
+#         - "features.rr.value >= 1.5"
+#     outcome:
+#       strength: "normal"
+#       risk: "medium"
+#       reward: "medium"
+#       confidence: 65
+#       reason_fa: "ورود عادی"
+#       reason_en: "Normal entry"
+#
+#   - id: "FALLBACK"
+#     priority: 999
+#     conditions:
+#       all: []
+#     outcome:
+#       strength: "weak"
+#       risk: "high"
+#       reward: "low"
+#       confidence: 20
+#       reason_fa: "شرایط نامناسب"
+#       reason_en: "Unfavorable conditions"

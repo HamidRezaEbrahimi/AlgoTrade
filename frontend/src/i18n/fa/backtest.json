@@ -1,0 +1,16 @@
+{
+  "title": "شبیه‌ساز بک‌تست",
+  "subtitle": "شبیه‌سازی دقیق و بدون خطای نگاه به آینده (No Look-ahead Bias) با مدل‌سازی کارمزد، اسلیپیج و خروج جزئی",
+  "symbol": "نماد",
+  "initial_capital": "سرمایه اولیه ($)",
+  "fee_rate": "کارمزد صرافی (%)",
+  "slippage_rate": "لغزش قیمت (%)",
+  "run_button": "اجرای بک‌تست",
+  "running": "در حال پردازش داده‌های تاریخی...",
+  "win_rate": "نرخ برد (Win Rate)",
+  "profit_factor": "فاکتور سود (Profit Factor)",
+  "max_drawdown": "حداکثر افت (Max DD)",
+  "total_trades": "تعداد کل معاملات",
+  "total_pnl": "سود/زیان کل ($)",
+  "equity_chart": "منحنی سرمایه حاصل از بک‌تست"
+}

@@ -1,0 +1,627 @@
+_meta:
+  schema_version: 1.1.0
+  pattern_version: 1.0.0
+  updated_at: <YYYY-MM-DD>
+  source: pattern_definitions.yaml
+  engine:
+    expr_lang: cel
+    mode: hybrid_features_first
+_policy_ref:
+  use: config/policies/edit_policy.global.yaml
+  overrides: []
+pattern:
+  key: <pattern_key>
+  id: <int_id>
+  family: <family>
+  subtype: <subtype>
+  names:
+    fa: <نام فارسی>
+    en: <English name>
+texts:
+  doc:
+    fa: '<شرح کامل و آموزشی الگو، شامل تعریف موج‌ها/نقاط، نسبت‌های رایج، رفتار بازار،
+      و کاربرد>
+
+      '
+    en: '<Full educational description of the pattern>
+
+      '
+  description:
+    fa: '<شرح کوتاه‌تر و عملیاتی‌تر برای UI/کاربر>
+
+      '
+    en: '<Short operational description for UI>
+
+      '
+  notes:
+    fa: '<نکات مهم: شرایط بازار مناسب/نامناسب، محل‌های رایج خطا، هشدارها، و نکات تریدر-محور>
+
+      '
+    en: '<Key notes: suitable/unsuitable contexts, common mistakes, trader notes>
+
+      '
+geometry:
+  point_model:
+    type: <6pt|5pt|Npt>
+    points:
+      - id: P0
+        ref: <wave_or_leg>.start
+      - id: P1
+        ref: <wave_or_leg>.end
+      - id: P2
+        ref: <wave_or_leg>.end
+      - id: P3
+        ref: <wave_or_leg>.end
+      - id: P4
+        ref: <wave_or_leg>.end
+      - id: P5
+        ref: <wave_or_leg>.end
+    wave_map:
+      leg1:
+        start: P0
+        end: P1
+      leg2:
+        start: P1
+        end: P2
+      leg3:
+        start: P2
+        end: P3
+      leg4:
+        start: P3
+        end: P4
+      leg5:
+        start: P4
+        end: P5
+  explain_fa: '<توضیح نقشه نقاط و اینکه هر نسبت/شکست روی کدام نقاط محاسبه می‌شود>
+
+    '
+  explain_en: '<Explain point map and how ratios/breaks are computed>
+
+    '
+ui_editing:
+  editable_sections:
+    - texts.doc
+    - texts.description
+    - texts.notes
+    - numbers
+    - rules
+    - transitions
+    - invalidations
+    - entry_setups
+    - outcome_scenarios
+    - quality
+    - lifecycle
+    - numbers.probabilities
+    - numbers.success_profiles
+    - feature_catalog
+numbers:
+  ratios:
+    - key: <ratio_key>
+      title_fa: <عنوان فارسی>
+      title_en: <English title>
+      min: <float>
+      max: <float>
+      typical: <float>
+      display:
+        formula_fa: <فرمول>
+        formula_en: <formula>
+      feature_ref: features.ratios.<ratio_key>
+  thresholds:
+    - key: <threshold_key>
+      title_fa: <عنوان فارسی>
+      title_en: <English title>
+      min: <float>
+      typical: <float>
+      levels:
+        weak: <float>
+        normal: <float>
+        strong: <float>
+      feature_ref: features.thresholds.<threshold_key>
+  probabilities:
+    occurrence:
+      value: <float_0_1>
+      text_fa: <متن احتمال وقوع>
+      text_en: <Occurrence probability text>
+    success:
+      value: <float_0_1>
+      text_fa: <متن احتمال موفقیت>
+      text_en: <Success probability text>
+  success_profiles:
+    by_trend_strength: {}
+    by_entry_type: {}
+error_catalog:
+  structure: []
+  ratios: []
+  completion: []
+  quality: []
+rules:
+  structure:
+    - id: <rule_id>
+      severity: <fail|warn|info>
+      error_code: <ERR_CODE_OR_WARN_CODE>
+      title_fa: <عنوان>
+      title_en: <Title>
+      expr_cel: <CEL boolean expr>
+      message_fa: <پیام>
+      message_en: <Message>
+  ratios: []
+  completion: []
+  quality: []
+transitions:
+  can_morph_to:
+    - key: <target_pattern_key>
+      title_fa: <عنوان>
+      title_en: <Title>
+      decision_rule_id: <id>
+      when_cel: <CEL boolean expr>
+      explain_fa: <توضیح>
+      explain_en: <Explain>
+decision_model:
+  order:
+    - exclude
+    - invalid
+    - morph
+    - valid
+  notes_fa: 'ترتیب تصمیم: exclude -> invalid -> morph -> valid. منطق morph فقط در
+    invalidations(kind=morph) enforce می‌شود؛ transitions نقش راهنما دارد.
+
+    '
+invalidations:
+  rules:
+    - id: <inv_rule_id>
+      error_code: <ERR_CODE>
+      when_cel: <CEL boolean expr>
+      decision:
+        kind: <invalid|exclude|morph>
+        reason_code: <REASON_CODE>
+        target_key: <target_pattern_key_if_morph>
+      ui:
+        title_fa: <عنوان>
+        badge_fa: <Badge>
+        explain_fa: <توضیح>
+        message_fa: <پیام>
+        message_en: <Message>
+lifecycle:
+  explain_fa: '<شرح چرخه عمر: تشکیل تا تکمیل>
+
+    '
+  explain_en: '<Lifecycle description>
+
+    '
+  min_points: <int>
+  stages:
+    - key: forming
+      when_cel: context.point_count < <int>
+    - key: <stage_key>
+      when_cel: <CEL boolean expr>
+quality:
+  strength:
+    model: weighted_sum
+    weights:
+      <factor_key_1>: <float_0_1>
+      <factor_key_2>: <float_0_1>
+    thresholds:
+      strong: <float_0_1>
+      normal: <float_0_1>
+  confidence:
+    model: weighted_sum
+    factors:
+      <factor_key_1>: <float_0_1>
+      <factor_key_2>: <float_0_1>
+    thresholds:
+      high: <float_0_1>
+      medium: <float_0_1>
+  risk_flags:
+    - id: <risk_flag_id>
+      level: <low|medium|high>
+      error_code: <RISK_CODE>
+      when_cel: <CEL boolean expr>
+      message_fa: <پیام>
+      message_en: <Message>
+entry_setups:
+  - id: <PATTERN_PREFIX>-A
+    name_fa: ورود A (اطراف P2)
+    label_fa: ورود A
+    label_en: Entry A
+    style: aggressive
+    rationale_fa: ورود زودهنگام اطراف P2
+    trigger_cel: features.progress.impulse2_started && features.rr.by_entry.entry_a
+      >= 1.0 && features.direction.i2_opposes_C
+    entry_zone:
+      point_ref: P2
+    stop_zone:
+      point_ref: P0
+    target_zone:
+      point_ref: P5
+    rr_calculation: '|P5-P2|/|P2-P0|'
+    rr_gate:
+      reject_below: 1.0
+      confirmable_from: 1.0
+      strong_from: 1.5
+    confirmation_hooks:
+      - features.direction.i2_opposes_C
+      - features.impulses.i2_slope_ratio
+    stop_cel: features.risk.stop_distance >= 0.0
+    confirms:
+      - cel: features.direction.i2_opposes_C
+        label_fa: جهت i2 خلاف C
+        label_en: i2 opposes C
+      - cel: features.impulses.i2_slope_ratio >= 0.7
+        label_fa: شیب قابل قبول
+        label_en: slope acceptable
+    risk_reward_fa: RR<1 رد معاملاتی
+    risk_reward_en: RR<1 trade reject
+    editable: true
+  - id: <PATTERN_PREFIX>-B
+    name_fa: ورود B (اطراف P4)
+    label_fa: ورود B
+    label_en: Entry B
+    style: conservative
+    rationale_fa: ورود پس از تکمیل ساختاری (عبور از P4)
+    trigger_cel: features.completion.i2_crossed_P4 && features.rr.by_entry.entry_b
+      >= 1.0 && features.direction.i2_opposes_C
+    entry_zone:
+      point_ref: P4
+    stop_zone:
+      point_ref: P0
+    target_zone:
+      point_ref: P5
+    rr_calculation: '|P5-P4|/|P4-P0|'
+    rr_gate:
+      reject_below: 1.0
+      confirmable_from: 1.0
+      strong_from: 1.5
+    confirmation_hooks:
+      - features.direction.i2_opposes_C
+      - features.impulses.i2_slope_ratio
+    stop_cel: features.risk.stop_distance >= 0.0
+    confirms:
+      - cel: features.direction.i2_opposes_C
+        label_fa: جهت i2 خلاف C
+        label_en: i2 opposes C
+      - cel: features.impulses.i2_slope_ratio >= 0.7
+        label_fa: شیب قابل قبول
+        label_en: slope acceptable
+      - cel: features.rr.by_entry.entry_b >= 1.0
+        label_fa: RR تایید
+        label_en: RR confirm
+    risk_reward_fa: RR<1 رد معاملاتی
+    risk_reward_en: RR<1 trade reject
+    editable: true
+outcome_scenarios:
+  - id: FILTERED_<PATTERN_SUFFIX>
+    priority: 0
+    conditions_cel:
+      all:
+        - '!features.structure_valid'
+    outcome:
+      comp: false
+      valid: false
+      risk_override: ultra_high
+      reward_override: low
+      strength_override: weak
+      succ: false
+      mark: false
+      reason_code: FILTERED
+      reason_fa: ❌ ساختار الگو نقض شده
+      description_fa: ساختار الگو نقض شده است. الگو فیلتر شده.
+      description_en: Pattern structure violated; filtered.
+  - id: FAIL_DIRECTION_<PATTERN_SUFFIX>
+    priority: 1
+    conditions_cel:
+      all:
+        - features.structure_valid
+        - features.completion.i2_crossed_P4
+        - '!features.direction.i2_opposes_C'
+    outcome:
+      comp: false
+      succ: false
+      valid: false
+      mark: false
+      reason_code: BLOCK_DIRECTION_VIOLATION
+      reason_fa: '❌ Fail: نقض جهت'
+      description_fa: i2 هم‌جهت C است؛ الگو Fail محسوب می‌شود.
+      description_en: Direction gate failed.
+      risk_override: high
+      reward_override: low
+      strength_override: weak
+  - id: REJECT_RR_LT_1_<PATTERN_SUFFIX>
+    priority: 5
+    conditions_cel:
+      all:
+        - features.structure_valid
+        - features.direction.i2_opposes_C
+        - features.completion.i2_crossed_P4
+        - features.rr.by_entry.entry_b < 1.0
+    outcome:
+      comp: true
+      valid: false
+      succ: false
+      mark: false
+      reason_code: BLOCK_RR_BELOW_1
+      reason_fa: '❌ NOT_TRADABLE: RR<1'
+      description_fa: با وجود تکمیل ساختاری، RR ورود فعال کمتر از 1 است.
+      description_en: RR below 1.
+      risk_override: high
+      reward_override: low
+      strength_override: weak
+  - id: PENDING_<PATTERN_SUFFIX>
+    priority: 10
+    conditions_cel:
+      all:
+        - features.structure_valid
+        - '!features.completion.i2_crossed_P4'
+    outcome:
+      comp: false
+      valid: true
+      succ: false
+      mark: true
+      reason_code: COMPLETION_REQUIRES_P4_CROSS
+      reason_fa: ⏳ در انتظار عبور از P4
+      description_fa: تا عبور i2 از P4، الگو تکمیل نیست.
+      description_en: Pending P4 cross.
+      risk_override: medium
+      reward_override: medium
+      strength_override: normal
+  - id: IDEAL_EXECUTION_<PATTERN_SUFFIX>
+    priority: 29
+    conditions_cel:
+      all:
+        - features.structure_valid
+        - features.direction.i2_opposes_C
+        - features.completion.i2_crossed_P4
+        - features.impulses.i2_slope_ratio >= 0.7
+        - features.rr.by_entry.entry_b >= 1.5
+    outcome:
+      comp: true
+      valid: true
+      succ: true
+      mark: true
+      reason_code: IDEAL_EXECUTION_BY_RR
+      reason_fa: 🏆 IDEAL_EXECUTION
+      description_fa: RR بالا با شیب قابل قبول.
+      description_en: Ideal execution by RR.
+      risk_override: low
+      reward_override: high
+      strength_override: normal
+  - id: COMPLETE_WEAK_<PATTERN_SUFFIX>
+    priority: 30
+    conditions_cel:
+      all:
+        - features.structure_valid
+        - features.direction.i2_opposes_C
+        - features.completion.i2_crossed_P4
+        - features.rr.by_entry.entry_b >= 1.0
+        - features.impulses.i2_slope_ratio < 0.7
+    outcome:
+      comp: true
+      valid: true
+      succ: true
+      mark: true
+      reason_code: COMPLETE_WEAK_SLOPE_LT_0_7
+      reason_fa: ⚠️ COMPLETE_WEAK
+      description_fa: عبور از P4 انجام شده ولی شیب کمتر از 0.7 است.
+      description_en: Complete weak.
+      risk_override: medium
+      reward_override: low
+      strength_override: weak
+  - id: COMPLETE_NORMAL_<PATTERN_SUFFIX>
+    priority: 21
+    conditions_cel:
+      all:
+        - features.structure_valid
+        - features.direction.i2_opposes_C
+        - features.completion.i2_crossed_P4
+        - features.rr.by_entry.entry_b >= 1.0
+        - features.impulses.i2_slope_ratio >= 0.7
+        - features.impulses.i2_slope_ratio < 1.0
+    outcome:
+      comp: true
+      valid: true
+      succ: true
+      mark: true
+      reason_code: COMPLETE_NORMAL_SLOPE_0_7_TO_1
+      reason_fa: ✅ COMPLETE_NORMAL
+      description_fa: عبور از P4 با شیب 0.7 تا 1.
+      description_en: Complete normal.
+      risk_override: medium
+      reward_override: medium
+      strength_override: normal
+  - id: COMPLETE_CONFIRMED_<PATTERN_SUFFIX>
+    priority: 22
+    conditions_cel:
+      all:
+        - features.structure_valid
+        - features.direction.i2_opposes_C
+        - features.completion.i2_crossed_P4
+        - features.rr.by_entry.entry_b >= 1.0
+        - features.impulses.i2_slope_ratio >= 1.0
+        - features.impulses.i2_slope_ratio < 1.2
+    outcome:
+      comp: true
+      valid: true
+      succ: true
+      mark: true
+      risk_override: medium
+      reward_override: high
+      strength_override: normal
+      reason_code: COMPLETE_CONFIRMED_SLOPE_1_TO_1_2
+      reason_fa: ✅ COMPLETE_CONFIRMED
+      description_fa: عبور از P4 با شیب 1 تا 1.2.
+      description_en: Complete confirmed.
+  - id: COMPLETE_STRONG_<PATTERN_SUFFIX>
+    priority: 23
+    conditions_cel:
+      all:
+        - features.structure_valid
+        - features.direction.i2_opposes_C
+        - features.completion.i2_crossed_P4
+        - features.rr.by_entry.entry_b >= 1.0
+        - features.impulses.i2_slope_ratio >= 1.2
+    outcome:
+      comp: true
+      valid: true
+      succ: true
+      mark: true
+      reason_code: COMPLETE_STRONG_SLOPE_GE_1_2
+      reason_fa: ✅ COMPLETE_STRONG
+      description_fa: عبور از P4 با شیب بالای 1.2.
+      description_en: Complete strong.
+      risk_override: low
+      reward_override: high
+      strength_override: strong
+  - id: FALLBACK_LAST_<PATTERN_SUFFIX>
+    priority: 999
+    conditions_cel:
+      all: []
+    outcome:
+      comp: false
+      valid: true
+      risk_override: medium
+      reward_override: medium
+      strength_override: normal
+      succ: false
+      mark: false
+      reason_code: FALLBACK
+      reason_fa: ℹ️ حالت پیش‌فرض
+      description_fa: هیچ سناریوی مشخصی match نشد؛ نیاز به بازبینی شرایط/تعاریف.
+      description_en: No specific scenario matched; review conditions/definitions.
+ui_defaults:
+  toolbar:
+    mark: true
+    strength: auto
+    direction: auto
+feature_catalog:
+  version: '1.0'
+  items:
+    - path: features.structure_valid
+      type: boolean
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+        - ui
+      desc_fa: آیا ساختار پایه الگو معتبر است؟
+      desc_en: Is base structure valid?
+      ui:
+        show: true
+        label_fa: ساختار معتبر؟
+        group: Meta
+      source:
+        kind: engine_derived
+    - path: features.invalidated
+      type: boolean
+      scope: pattern
+      required: false
+      required_for:
+        - engine
+      desc_fa: آیا الگو باطل شده است؟
+      desc_en: Is pattern invalidated?
+      ui:
+        show: true
+        label_fa: ابطال شده؟
+        group: Meta
+      source:
+        kind: engine_derived
+    - path: features.completion.i2_crossed_P4
+      type: boolean
+      scope: pattern
+      required: false
+      required_for:
+        - engine
+      desc_fa: آیا i2 از P4 عبور کرده؟ (شرط تکمیل)
+      desc_en: Has i2 crossed P4? (completion gate)
+      ui:
+        show: true
+        label_fa: عبور از P4
+        group: Completion
+      source:
+        kind: engine_derived
+    - path: features.direction.i2_opposes_C
+      type: boolean
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+        - ui
+      desc_fa: آیا i2 خلاف C است؟
+      desc_en: Does i2 oppose C?
+      ui:
+        show: true
+        label_fa: جهت معتبر
+        group: Direction
+      source:
+        kind: engine_derived
+    - path: features.direction.i2_same_as_C
+      type: boolean
+      scope: pattern
+      required: false
+      required_for:
+        - engine
+      desc_fa: آیا i2 هم‌جهت C است؟
+      desc_en: Is i2 same direction as C?
+      ui:
+        show: true
+        label_fa: نقض جهت
+        group: Direction
+      source:
+        kind: engine_derived
+    - path: features.rr.by_entry.entry_a
+      type: float
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+        - ui
+      desc_fa: RR برای ورود A
+      desc_en: RR for Entry A
+      ui:
+        show: true
+        label_fa: RR ورود A
+        group: RR
+      source:
+        kind: engine_derived
+    - path: features.rr.by_entry.entry_b
+      type: float
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+        - ui
+      desc_fa: RR برای ورود B
+      desc_en: RR for Entry B
+      ui:
+        show: true
+        label_fa: RR ورود B
+        group: RR
+      source:
+        kind: engine_derived
+    - path: features.impulses.i2_slope_ratio
+      type: float
+      scope: pattern
+      required: true
+      required_for:
+        - engine
+        - ui
+      desc_fa: نسبت شیب i2 به i1
+      desc_en: i2 slope ratio vs i1
+      ui:
+        show: true
+        label_fa: شیب i2
+        group: Quality
+      source:
+        kind: engine_derived
+engine_contract:
+  scenario_resolution:
+    mode: first_match_by_priority
+  decision_resolution:
+    mode: first_match_by_order
+    order_ref: decision_model.order
+    behavior:
+      on_invalid: stop
+      on_exclude: stop
+      on_morph: handoff
+  required_context_paths:
+    - context.point_count
+    - context.trend_strength
+    - context.trade_direction

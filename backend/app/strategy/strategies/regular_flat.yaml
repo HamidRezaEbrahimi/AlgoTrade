@@ -1,0 +1,172 @@
+meta:
+  schema_version: "1.0"
+  strategy_version: "1.0.0"
+  source: "config/patterns/regular_flat.yaml"
+  engine:
+    mode: "wave_pattern"
+
+strategy:
+  key: "regular_flat"
+  names:
+    fa: "رگولار فلت"
+    en: "Regular Flat"
+  family: "corrective"
+  description:
+    fa: >
+      الگوی اصلاحی رگولار فلت (Regular Flat).
+      موج B بین ۸۰-۱۰۰٪ موج A اصلاح می‌کند.
+      موج C از انتهای A فراتر رفته (۱.۰-۱.۳۸ برابر A).
+      ورود پس از عبور ایمپالس ۲ از سطح P4.
+    en: >
+      Regular Flat corrective pattern.
+      Wave B retraces 80-100% of A. Wave C exceeds A end (1.0-1.38x A).
+      Entry after impulse 2 crosses P4 level.
+  tags: ["corrective", "flat", "wave-pattern"]
+  is_builtin: true
+
+geometry:
+  point_model: "6pt"
+  points: ["P0", "P1", "P2", "P3", "P4", "P5"]
+  wave_map:
+    impulse1: { start: "P0", end: "P1" }
+    A: { start: "P1", end: "P2" }
+    B: { start: "P2", end: "P3" }
+    C: { start: "P3", end: "P4" }
+    impulse2: { start: "P4", end: "P5" }
+
+parameters:
+  b_over_a_min: 0.8
+  b_over_a_max: 1.0
+  c_over_a_min: 1.0
+  c_over_a_max: 1.38
+  min_rr_entry_b: 1.0
+  min_slope_weak: 0.7
+  min_slope_normal: 1.0
+  min_slope_strong: 1.2
+
+rules:
+  structure:
+    - id: "b_rule"
+      severity: "fail"
+      expr: "features.metrics.b_over_a >= 0.8"
+      title_fa: "B باید حداقل ۸۰٪ A را اصلاح کند"
+      title_en: "B must retrace at least 80% of A"
+    - id: "c_rule"
+      severity: "fail"
+      expr: "features.metrics.c_over_a >= 1.0"
+      title_fa: "C باید از انتهای A فراتر برود"
+      title_en: "C must break A end"
+
+entry_conditions:
+  all:
+    - "features.structure_valid"
+    - "features.direction.i2_opposes_C"
+    - "features.completion.i2_crossed_P4"
+    - "features.rr.by_entry.entry_b >= 1.0"
+
+exit_rules:
+  stop_loss:
+    method: "wave_origin"
+    reference_point: "P0"
+  trailing:
+    activate_at_rr: 1.5
+    partial_close_at_rr: 2.5
+    partial_close_pct: 50
+    trail_distance: "1.2_atr"
+  targets:
+    tp1_rr: 1.5
+    tp2_rr: 2.5
+
+outcome_scenarios:
+  - id: "IDEAL_EXECUTION_RF"
+    priority: 10
+    conditions:
+      all:
+        - "features.structure_valid"
+        - "features.direction.i2_opposes_C"
+        - "features.completion.i2_crossed_P4"
+        - "features.impulses.i2_slope_ratio >= 0.7"
+        - "features.rr.by_entry.entry_b >= 1.5"
+    outcome:
+      strength: "strong"
+      risk: "low"
+      reward: "high"
+      confidence: 85
+      reason_fa: "🏆 ورود ایده‌آل: عبور قوی از P4 با RR بالا"
+      reason_en: "Ideal: strong P4 cross with high RR"
+
+  - id: "COMPLETE_STRONG_RF"
+    priority: 20
+    conditions:
+      all:
+        - "features.structure_valid"
+        - "features.direction.i2_opposes_C"
+        - "features.completion.i2_crossed_P4"
+        - "features.impulses.i2_slope_ratio >= 1.2"
+        - "features.rr.by_entry.entry_b >= 1.0"
+    outcome:
+      strength: "strong"
+      risk: "low"
+      reward: "high"
+      confidence: 80
+      reason_fa: "✅ تکمیل قوی: شیب بالای ۱.۲"
+      reason_en: "Strong completion: slope > 1.2"
+
+  - id: "COMPLETE_NORMAL_RF"
+    priority: 30
+    conditions:
+      all:
+        - "features.structure_valid"
+        - "features.direction.i2_opposes_C"
+        - "features.completion.i2_crossed_P4"
+        - "features.impulses.i2_slope_ratio >= 0.7"
+        - "features.rr.by_entry.entry_b >= 1.0"
+    outcome:
+      strength: "normal"
+      risk: "medium"
+      reward: "medium"
+      confidence: 65
+      reason_fa: "✅ تکمیل عادی: عبور از P4 با شیب قابل قبول"
+      reason_en: "Normal completion with acceptable slope"
+
+  - id: "COMPLETE_WEAK_RF"
+    priority: 40
+    conditions:
+      all:
+        - "features.structure_valid"
+        - "features.direction.i2_opposes_C"
+        - "features.completion.i2_crossed_P4"
+        - "features.impulses.i2_slope_ratio < 0.7"
+    outcome:
+      strength: "weak"
+      risk: "medium"
+      reward: "low"
+      confidence: 40
+      reason_fa: "⚠️ تکمیل ضعیف: شیب کمتر از ۰.۷"
+      reason_en: "Weak completion: slope < 0.7"
+
+  - id: "PENDING_RF"
+    priority: 50
+    conditions:
+      all:
+        - "features.structure_valid"
+        - "!features.completion.i2_crossed_P4"
+    outcome:
+      strength: "normal"
+      risk: "medium"
+      reward: "medium"
+      confidence: 30
+      reason_fa: "⏳ در انتظار عبور از P4"
+      reason_en: "Pending P4 cross"
+
+  - id: "FALLBACK_RF"
+    priority: 999
+    conditions:
+      all: []
+    outcome:
+      strength: "weak"
+      risk: "high"
+      reward: "low"
+      confidence: 10
+      reason_fa: "ℹ️ حالت پیش‌فرض: نیاز به بازبینی"
+      reason_en: "Default: review needed"
